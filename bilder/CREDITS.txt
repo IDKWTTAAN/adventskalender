@@ -4,3 +4,4 @@ quokka1: SKY-PuLeun, CC BY-SA 4.0 | quokka2: Hesperian, CC BY 3.0 | quokka3-4: C
 koala1: Benjamint444, CC BY-SA 3.0 | koala2: National Media Museum, gemeinfrei | koala3: Sanjay ach, CC BY-SA 3.0 | koala4: Dinkum, CC0 | koala5: Diliff, CC BY-SA 3.0 | koala6: AggieNie, CC BY-SA 4.0
 belohnung-eule: Hari K Patibanda, CC BY 2.0 | belohnung-welpe: Jami430, CC BY-SA 4.0 | belohnung-wombats: Peterdownunder, CC BY-SA 3.0
 belohnung-baer: Amaury Laporte, CC BY 2.0 | belohnung-autohund: Andrew Pons, CC0 | belohnung-corgi: Capersfish, CC0
+belohnung-panda: Sunuwargr, CC BY-SA 4.0

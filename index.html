@@ -266,7 +266,7 @@ const TAGE = [
     question:"Welche Aussage über Wombats ist gelogen?",
     options:["Wombats können bis zu 40 km/h schnell rennen","Der Beutel von Wombats öffnet sich nach hinten","Wombats machen Winterschlaf in Baumkronen"],
     answer:2,
-    feedbacks:["Stimmt tatsächlich! Die sind schneller, als sie aussehen.","Stimmt wirklich! So kommt beim Buddeln keine Erde rein.","Erwischt! Wombats klettern nicht auf Bäume, die buddeln lieber. 🐾"],
+    feedbacks:["Falsch, aber ich weiß, mit Zahlen hast du es eh nicht so gut. 😌","Falsch. Klingt absurd, ist aber echt so. Absurd ist nur, dass du das nicht wusstest.","Da hast du wie immer recht. Kein Wombat ist jemals freiwillig auf einen Baum geklettert."],
     reward:{img:"bilder/belohnung-wombats.jpg", text:"Belohnung: echte Baby-Wombats. 🐾"} },
 
   { day:10, icon:"🍿", title:"Emoji-Kino", type:"quiz",
@@ -307,8 +307,12 @@ const TAGE = [
     html:`<p>Koalas schlafen bis zu <b>20 Stunden am Tag</b>. Ein Vorbild.</p>`,
     images:KOALA, credits:KOALA_C, button:"Noch ein Koala! 🐨" },
 
-  { day:17, icon:"🏍️", title:"Dein Biker-Name", type:"biker",
-    html:`<p>Jede echte Bikerin braucht einen Namen. Lass dir einen geben:</p>` },
+  { day:17, icon:"🗣️", title:"Wer hat's gesagt? Teil 2", type:"quiz",
+    question:"„Gut, dann hat wenigstens einer von uns Vertrauen darin.“ (über die eigenen Kochkünste)",
+    options:["Emily","Mike","Ein Sternekoch"],
+    answer:0,
+    feedbacks:["Natürlich du. Ich hab übrigens immer noch Vertrauen. Glaub ich.","Mike vertraut niemandem. Mike macht nichts.","Ein Sternekoch hätte etwas mehr Selbstvertrauen."],
+    reward:{img:"bilder/belohnung-panda.jpg", text:"Belohnung: ein kleiner Roter Panda. Einfach so. 🐾"} },
 
   { day:18, icon:"🌙", title:"Gutschein",
     coupon:{ title:"1× Anruf, wenn's nachts im dunklen Zimmer zu gruselig wird", text:"Gilt rund um die Uhr. Auch wegen Mike." } },
@@ -326,7 +330,7 @@ const TAGE = [
           <ul>
             <li><b>Name:</b> Mike</li>
             <li><b>Alter:</b> unklar</li>
-            <li><b>Wohnort:</b> Sprachnachrichten</li>
+            <li><b>Wohnort:</b> Sprachnachrichten und die Köpfe anderer Menschen</li>
             <li><b>Hobbys:</b> nichts machen</li>
             <li><b>Kann man mich sehen?</b> Kommt drauf an</li>
             <li><b>Lieblingsessen:</b> deine Lasagne (noch nicht probiert, aber viel gehört)</li>
@@ -350,7 +354,7 @@ const TAGE = [
   { day:24, icon:"🎁", title:"Frohe Weihnachten, Emily!", big:true,
     html:`<p>24 Türchen, 0 Spinnen, ungefähr eine gelöste Matheaufgabe.</p>
           <p>Ich hoffe, der Kalender hat dir den Dezember ein bisschen versüßt.</p>
-          <p>Schön, dass du wieder da bist. Jetzt kann die Lasagne-Prüfung ja endlich stattfinden. 🍝</p>
+          <p>Schön, dass du wieder da bist. Jetzt kann ich deine Lasagne ja endlich mal testen. 🍝</p>
           <p>Frohe Weihnachten! 🎄</p>
           <p class="small">PS: Mike lässt grüßen.</p>` },
 ];
