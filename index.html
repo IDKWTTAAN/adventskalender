@@ -517,7 +517,7 @@ const TAGE = [
             <button class="btn" id="dogbtn">Noch ein Hund! 🐶</button>`;
     }
     if (T === "gallery"){
-      h += `<div id="galbox"></div><p class="credit" id="galcred"></p><button class="btn" id="galbtn">${day.button}</button>`;
+      h += `<div id="galbox"></div><button class="btn" id="galbtn">${day.button}</button>`;
     }
     if (T === "wheel"){
       h += `<div class="wheel" id="wheel">?</div><button class="btn" id="wheelbtn">Drehen 🎡</button>`;
@@ -584,7 +584,7 @@ const TAGE = [
       const img = new Image(); img.className = "dogimg"; img.alt = day.title;
       $("galbox").appendChild(img);
       let i = Math.floor(Math.random()*day.images.length);
-      const show = ()=>{ img.src = day.images[i]; $("galcred").textContent = "Foto: " + day.credits[i] + " (Wikimedia Commons)"; };
+      const show = ()=>{ img.src = day.images[i]; };
       $("galbtn").addEventListener("click", ()=>{ i = (i+1) % day.images.length; show(); });
       show();
     }
