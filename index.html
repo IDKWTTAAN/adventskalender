@@ -140,6 +140,7 @@ body.in .gate{display:none}
 .calc .pwin{margin:0 0 12px;padding:10px}
 .rate{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0;font-size:16px}
 .star{border:0;background:none;font-size:26px;color:var(--gold);cursor:pointer;padding:2px 3px;min-width:34px;min-height:40px}
+.reward{margin-top:14px;padding-top:12px;border-top:2px dashed #e3d3b8;animation:pop .4s ease}
 .credit{font-size:11px;color:var(--muted);margin:-4px 0 10px}
 textarea.pwin{resize:vertical;font-family:"Nunito"}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
@@ -231,7 +232,8 @@ const TAGE = [
     question:"Kleines Aufwärmen für deinen ersten Schultag zuhause: Wie viel ist 7 + 8?",
     options:["13","15","Kommt drauf an","Ich ruf dich an und frag","Wer will meinen Untergang??"],
     answer:1,
-    feedbacks:["Wie bitte????","Richtig! Mathe LK ist quasi sicher. 🎓","Worauf denn bitte???","Ich geh ran. Verraten tu ich's trotzdem nicht. 📞","Mike."] },
+    feedbacks:["Wie bitte????","Richtig! Mathe LK ist quasi sicher. 🎓","Worauf denn bitte???","Ich geh ran. Verraten tu ich's trotzdem nicht. 📞","Mike."],
+    reward:{img:"bilder/belohnung-eule.jpg", text:"Belohnung: eine schlaue Eule. Fast so schlau wie du gerade. 🦉"} },
 
   { day:4, icon:"🍝", title:"Offizielle Lasagne-Bewertung",
     html:`<p><b>Lasagne von Emily</b></p>
@@ -246,7 +248,8 @@ const TAGE = [
     question:"„Willst du mich irgendwie traumatisieren?“",
     options:["Emily","Mike","Bibi und Tina"],
     answer:0,
-    feedbacks:["Natürlich du. Wegen eines Trailers. 😌","Mike traumatisiert niemanden. Mike macht nichts.","Die würden sowas nie sagen. Die haben vor nichts Angst."] },
+    feedbacks:["Natürlich du. Wegen eines Trailers. 😌","Mike traumatisiert niemanden. Mike macht nichts.","Die würden sowas nie sagen. Die haben vor nichts Angst."],
+    reward:{img:"bilder/belohnung-welpe.jpg", text:"Belohnung: ein Welpe, der ganz beruhigt schläft. 🐶"} },
 
   { day:6, icon:"🎅", title:"Nikolaus-Gutschein",
     coupon:{ title:"1× Film aussuchen", text:"Bitte wähl Horror aus." } },
@@ -263,19 +266,22 @@ const TAGE = [
     question:"Welche Aussage über Wombats ist gelogen?",
     options:["Wombats können bis zu 40 km/h schnell rennen","Der Beutel von Wombats öffnet sich nach hinten","Wombats machen Winterschlaf in Baumkronen"],
     answer:2,
-    feedbacks:["Stimmt tatsächlich! Die sind schneller, als sie aussehen.","Stimmt wirklich! So kommt beim Buddeln keine Erde rein.","Erwischt! Wombats klettern nicht auf Bäume, die buddeln lieber. 🐾"] },
+    feedbacks:["Stimmt tatsächlich! Die sind schneller, als sie aussehen.","Stimmt wirklich! So kommt beim Buddeln keine Erde rein.","Erwischt! Wombats klettern nicht auf Bäume, die buddeln lieber. 🐾"],
+    reward:{img:"bilder/belohnung-wombats.jpg", text:"Belohnung: echte Baby-Wombats. 🐾"} },
 
   { day:10, icon:"🍿", title:"Emoji-Kino", type:"quiz",
     question:"Welcher Film ist das? 🐻🧥🍊🇬🇧",
     options:["Paddington","Bibi und Tina","Ein Horrorfilm"],
     answer:0,
-    feedbacks:["Richtig! Bär, Mantel, Orangenmarmelade, London. 🍊","Knapp. Da wär's ein Pferd. 🐴","Schön, dass du Interesse zeigst. Aber nein. 😏"] },
+    feedbacks:["Richtig! Bär, Mantel, Orangenmarmelade, London. 🍊","Knapp. Da wär's ein Pferd. 🐴","Schön, dass du Interesse zeigst. Aber nein. 😏"],
+    reward:{img:"bilder/belohnung-baer.jpg", text:"Belohnung: ein Brillenbär. Paddington ist auch einer. 🐻"} },
 
   { day:11, icon:"🚦", title:"Theorieprüfung", type:"quiz",
     question:"Frage 1 von 30, 5 Punkte: Wer hat hier Vorfahrt?",
     options:["Das Auto von rechts","Das wasserstoffbetriebene Hochgeschwindigkeitsbadewannenpersonenbeförderungsfahrzeug mit Gummientennavigationssystem 🛁","Mike"],
     answer:1,
-    feedbacks:["Durchgefallen. Herr Prüfer ist enttäuscht. 120 km rückwärts zurück zum Start.","Korrekt. Die Badewanne hat immer Vorfahrt. Bestanden! 🎉","Also kannst du ihn doch schon sehen?"] },
+    feedbacks:["Durchgefallen. Herr Prüfer ist enttäuscht. 120 km rückwärts zurück zum Start.","Korrekt. Die Badewanne hat immer Vorfahrt. Bestanden! 🎉","Also kannst du ihn doch schon sehen?"],
+    reward:{img:"bilder/belohnung-autohund.jpg", text:"Belohnung: der einzige Beifahrer, der nie meckert. 🚗"} },
 
   { day:12, icon:"🔦", title:"Gute-Nacht-Kontrolle",
     html:`<p>Wally hat heute dein Zimmer kontrolliert, damit du ganz beruhigt schlafen kannst:</p>
@@ -312,7 +318,8 @@ const TAGE = [
 
   { day:20, icon:"📋", title:"Dein England-Zeugnis", type:"rating",
     html:`<p>Bevor's nach Hause geht: Bitte bewerte dein Auslandsjahr.</p>`,
-    cats:["Wetter ☔","Essen 🍽️","Hunde 🐶","Schule 📚"] },
+    cats:["Wetter ☔","Essen 🍽️","Hunde 🐶","Schule 📚"],
+    reward:{img:"bilder/belohnung-corgi.jpg", text:"Belohnung: ein Corgi. Britischer wird's nicht. 🇬🇧"} },
 
   { day:21, icon:"🕶️", title:"Mike stellt sich vor", from:"Mike 👋",
     html:`<p>Hi Emily, Mike hier. Wird Zeit, dass ich mich mal richtig vorstelle.</p>
@@ -497,6 +504,15 @@ const TAGE = [
   const pick = a => a[Math.floor(Math.random()*a.length)];
   const esc = s => s.replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
+  function showReward(day){
+    if (!day.reward || document.getElementById("reward")) return;
+    const r = document.createElement("div"); r.id = "reward"; r.className = "reward";
+    r.innerHTML = '<p><b>' + day.reward.text + '</b></p>';
+    const img = new Image(); img.className = "dogimg"; img.alt = "Belohnung"; img.src = day.reward.img;
+    img.onerror = ()=>img.remove(); r.appendChild(img);
+    const sig = body.querySelector(".sig"); body.insertBefore(r, sig);
+    setTimeout(()=>{ try{ r.scrollIntoView({behavior:"smooth",block:"nearest"}); }catch(e){} }, 50);
+  }
   function openModal(day){
     lastFocus = document.activeElement;
     let h = `<div class="m-day">${day.day}. Dezember</div>
@@ -563,7 +579,7 @@ const TAGE = [
         body.querySelectorAll(".opt").forEach(x=>x.classList.remove("right","wrong"));
         btn.classList.add(ok ? "right" : "wrong");
         fb.textContent = day.feedbacks ? day.feedbacks[i] : (ok ? day.right : day.wrong);
-        if (ok) confetti();
+        if (ok){ confetti(); showReward(day); }
       }));
     }
     if (T === "dog"){
@@ -648,7 +664,7 @@ const TAGE = [
         if (n < day.cats.length){ $("ratefb").textContent = "Erst alles bewerten. Das ist ein offizielles Dokument."; return; }
         const avg = Object.values(vals).reduce((a,b)=>a+b,0)/n;
         $("ratefb").textContent = `Gesamtnote: ${avg.toFixed(1).replace(".",",")} ⭐. Danke für dein Feedback, es wurde an Mike weitergeleitet.`;
-        confetti();
+        confetti(); showReward(day);
       });
     }
     if (T === "suggest"){
