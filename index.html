@@ -103,6 +103,7 @@ h1 span{color:var(--gold)}
 footer{text-align:center;margin-top:30px;color:#9fb0c6;font-size:13px}
 .keybtn{margin-top:10px;width:44px;height:44px;border:0;background:none;font-size:18px;opacity:.25;cursor:pointer}
 .keybtn:hover{opacity:.7}
+.pwin{width:100%;min-height:48px;border-radius:12px;border:2px solid #e3d3b8;padding:10px 14px;font:16px "Nunito";margin:6px 0 12px;background:#fff;color:var(--ink)}
 .preview-badge button{border:0;background:none;font:inherit;text-decoration:underline;cursor:pointer;color:inherit;padding:0 0 0 6px}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -297,16 +298,29 @@ const TAGE = [
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
     return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
   }
-  document.getElementById("keyBtn").addEventListener("click", async ()=>{
+  document.getElementById("keyBtn").addEventListener("click", ()=>{
     if (PREVIEW) return;
-    const pw = prompt("Passwort für den Testmodus:");
-    if (!pw) return;
-    let h = "";
-    try{ h = await sha256(pw); }catch(e){ alert("Das geht in diesem Browser nicht."); return; }
-    if (h === PW_HASH){
-      try{ localStorage.setItem(ADMIN_KEY, h); }catch(e){}
-      location.reload();
-    } else alert("Falsches Passwort 🐾");
+    lastFocus = document.activeElement;
+    body.innerHTML = `<h2 id="mTitle">Testmodus</h2>
+      <form id="pwForm" autocomplete="off">
+        <input id="pwIn" type="password" placeholder="Passwort" class="pwin">
+        <button class="btn" type="submit">Öffnen</button>
+        <div class="feedback" id="pwFb"></div>
+      </form>`;
+    backdrop.classList.add("show");
+    document.body.style.overflow = "hidden";
+    setTimeout(()=>document.getElementById("pwIn").focus(), 50);
+    document.getElementById("pwForm").addEventListener("submit", async e=>{
+      e.preventDefault();
+      const fb = document.getElementById("pwFb");
+      let h = "";
+      try{ h = await sha256(document.getElementById("pwIn").value); }
+      catch(err){ fb.textContent = "Das geht in diesem Browser leider nicht."; return; }
+      if (h === PW_HASH){
+        try{ localStorage.setItem(ADMIN_KEY, h); }catch(err){}
+        location.reload();
+      } else fb.textContent = "Falsches Passwort 🐾";
+    });
   });
 
   // Im Testmodus: ?datum=2026-12-15 simuliert ein Datum
