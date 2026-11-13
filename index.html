@@ -141,6 +141,7 @@ body.in .gate{display:none}
 .rate{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0;font-size:16px}
 .star{border:0;background:none;font-size:26px;color:var(--gold);cursor:pointer;padding:2px 3px;min-width:34px;min-height:40px}
 .reward{margin-top:14px;padding-top:12px;border-top:2px dashed #e3d3b8;animation:pop .4s ease}
+.fullimg{width:100%;height:auto;display:block;border-radius:14px;margin:6px 0 10px}
 .credit{font-size:11px;color:var(--muted);margin:-4px 0 10px}
 textarea.pwin{resize:vertical;font-family:"Nunito"}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
@@ -238,7 +239,7 @@ const TAGE = [
   { day:4, icon:"🍝", title:"Offizielle Lasagne-Bewertung",
     html:`<p><b>Lasagne von Emily</b></p>
           <ul>
-            <li>Bewertung laut Emily: „Vielleicht so minimal besser“ als jede Lasagne im Internet</li>
+            <li>Bewertung laut Emily: „Vielleicht so minimal besser“ als eine Tiefkühllasagne</li>
             <li>Michelin-Sterne laut Emily: mindestens einer ⭐</li>
             <li>Unabhängige Prüfung durch Lilian: <b>ausstehend</b></li>
           </ul>
@@ -284,14 +285,14 @@ const TAGE = [
     reward:{img:"bilder/belohnung-autohund.jpg", text:"Belohnung: der einzige Beifahrer, der nie meckert. 🚗"} },
 
   { day:12, icon:"🔦", title:"Gute-Nacht-Kontrolle",
-    html:`<p>Wally hat heute dein Zimmer kontrolliert, damit du ganz beruhigt schlafen kannst:</p>
+    html:`<p>Wally hat heute dein Zimmer kontrolliert:</p>
           <ul>
             <li>Unterm Bett: nichts ✅</li>
             <li>Im Schrank: nichts ✅</li>
             <li>Hinterm Vorhang: nichts ✅</li>
             <li>In der Ecke: … Mike.</li>
           </ul>
-          <p>Aber Mike macht nichts, ist nen super Typ. Gute Nacht! 🌙</p>` },
+          <p>Aber Mike macht nichts, ist nen super Typ. Also kannst du heute Nacht ganz beruhigt schlafen. 🌙</p>` },
 
   { day:13, icon:"😊", title:"Quokka-Pause", type:"gallery",
     html:`<p>Quokkas sehen aus, als würden sie <b>dauernd lächeln</b>. Ansteckend.</p>`,
@@ -340,7 +341,7 @@ const TAGE = [
   { day:22, icon:"🎥", title:"Was Entspannteres", type:"suggest",
     html:`<p>Du darfst den Film aussuchen. Schreib hier deine Vorschläge rein:</p>` },
 
-  { day:23, icon:"🎄", title:"Fast geschafft",
+  { day:23, icon:"🎄", title:"Fast geschafft", type:"dog",
     html:`<p>Morgen ist Heiligabend! Die Bilanz:</p>
           <ul>
             <li>Gesehene Hunde: unendlich</li>
@@ -349,14 +350,18 @@ const TAGE = [
             <li>Gesehene Horrorfilme: 0 (noch 😏)</li>
             <li>Probierte Lasagne: 0 (muss sich ändern)</li>
             <li>Mike-Sichtungen: zu viele</li>
-          </ul>` },
+          </ul>
+          <p>Und weil's so schön war: nochmal Hunde.</p>` },
 
-  { day:24, icon:"🎁", title:"Frohe Weihnachten, Emily!", big:true,
+  { day:24, icon:"🎁", title:"Frohe Weihnachten, Emily!", big:true, type:"gallery",
+    images:[...KAENGURU,...QUOKKA,...KOALA,"bilder/belohnung-eule.jpg","bilder/belohnung-welpe.jpg","bilder/belohnung-wombats.jpg","bilder/belohnung-baer.jpg","bilder/belohnung-autohund.jpg","bilder/belohnung-corgi.jpg","bilder/belohnung-panda.jpg"],
+    button:"Noch ein Tier! 🐾",
     html:`<p>24 Türchen, 0 Spinnen, ungefähr eine gelöste Matheaufgabe.</p>
           <p>Ich hoffe, der Kalender hat dir den Dezember ein bisschen versüßt.</p>
           <p>Schön, dass du wieder da bist. Jetzt kann ich deine Lasagne ja endlich mal testen. 🍝</p>
           <p>Frohe Weihnachten! 🎄</p>
-          <p class="small">PS: Mike lässt grüßen.</p>` },
+          <p class="small">PS: Mike lässt grüßen.</p>
+          <p>Und zum Schluss nochmal alle Tiere aus dem Kalender:</p>` },
 ];
 
 /* ======================= AB HIER: CODE ======================= */
@@ -646,13 +651,10 @@ const TAGE = [
       let s = 0;
       $("trbtn").addEventListener("click", ()=>{
         if (s < steps.length){ $("trtxt").textContent = steps[s][0]; $("trbtn").textContent = steps[s][1]; s++; return; }
-        $("trbox").innerHTML = `<p><b>Der gruseligste Trailer des Jahres:</b></p><div id="trimg"></div><p class="small" id="trfail" style="display:none">Der Welpe schläft gerade. Stell ihn dir einfach vor. 🐶</p>`;
-        const img = new Image(); img.className = "dogimg"; img.alt = "Ein Hund"; img.style.display = "none";
+        $("trbox").innerHTML = `<p><b>Der gruseligste Trailer des Jahres:</b></p><div id="trimg"></div><p><b>Das ist Mike.</b></p>`;
+        const img = new Image(); img.className = "fullimg"; img.alt = "Mike"; img.src = "bilder/mike.png";
+        img.onerror = ()=>img.remove();
         $("trimg").appendChild(img);
-        img.onerror = ()=>{ img.style.display="none"; $("trfail").style.display="block"; };
-        fetch("https://dog.ceo/api/breeds/image/random")
-          .then(r=>r.json()).then(j=>{ img.src=j.message; img.style.display="block"; })
-          .catch(()=>{ $("trfail").style.display="block"; });
       });
     }
     if (T === "rating"){
