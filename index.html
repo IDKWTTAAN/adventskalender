@@ -101,8 +101,16 @@ h1 span{color:var(--gold)}
 .photo{width:100%;border-radius:14px;margin:6px 0 12px;display:block}
 .sig{font-family:"Fredoka";font-weight:600;color:var(--red);margin-top:6px}
 footer{text-align:center;margin-top:30px;color:#9fb0c6;font-size:13px}
-.keybtn{margin-top:10px;width:44px;height:44px;border:0;background:none;font-size:18px;opacity:.25;cursor:pointer}
-.keybtn:hover{opacity:.7}
+body:not(.in) .wrap{display:none}
+body.in .gate{display:none}
+.gate{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.gate-card{background:var(--cream);color:var(--ink);width:100%;max-width:360px;border-radius:22px;padding:26px 22px;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.25)}
+.gate-card h1{color:var(--ink);font-size:30px}
+.gate-card h1 span{color:var(--red)}
+.gate-card svg{width:90px;height:auto;display:block;margin:0 auto 6px}
+.gate-hint{color:var(--muted);margin:6px 0 12px}
+.gate-card .btn{width:100%}
+.gate-card.shake{animation:shake .4s}
 .pwin{width:100%;min-height:48px;border-radius:12px;border:2px solid #e3d3b8;padding:10px 14px;font:16px "Nunito";margin:6px 0 12px;background:#fff;color:var(--ink)}
 .preview-badge button{border:0;background:none;font:inherit;text-decoration:underline;cursor:pointer;color:inherit;padding:0 0 0 6px}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
@@ -110,6 +118,17 @@ footer{text-align:center;margin-top:30px;color:#9fb0c6;font-size:13px}
 </head>
 <body>
 <canvas id="snow" aria-hidden="true"></canvas>
+
+<div class="gate" id="gate">
+  <form class="gate-card" id="gateCard" autocomplete="off">
+    <div id="gateMascot"></div>
+    <h1>Psst&hellip; <span>Passwort?</span></h1>
+    <p class="gate-hint">Nur für Emily.</p>
+    <input id="gateIn" type="password" placeholder="Passwort" class="pwin" aria-label="Passwort">
+    <button class="btn" type="submit">Reinlassen</button>
+    <div class="feedback" id="gateFb"></div>
+  </form>
+</div>
 
 <div class="wrap">
   <header>
@@ -135,8 +154,7 @@ footer{text-align:center;margin-top:30px;color:#9fb0c6;font-size:13px}
 
   <main class="grid" id="grid"></main>
 
-  <footer>Mit Liebe gebaut &middot; Gilt als Mathe-Hausaufgabe: 24 Türchen zählen
-    <br><button id="keyBtn" class="keybtn" aria-label="Testmodus">🔑</button></footer>
+  <footer>Mit Liebe gebaut &middot; Gilt als Mathe-Hausaufgabe: 24 Türchen zählen</footer>
 </div>
 
 <div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="mTitle">
@@ -288,39 +306,42 @@ const TAGE = [
 
 /* ======================= AB HIER: CODE ======================= */
 (function(){
-  // Testmodus: über den 🔑 unten auf der Seite mit Passwort freischalten.
-  // Es steht nur der SHA-256-Hash hier, nicht das Passwort selbst.
-  const PW_HASH = "22825e94390e6d4855af965afa3f27e4cd90f7ef8010f3a45904a1008fcdd247";
-  const ADMIN_KEY = "advent-testmodus";
-  let PREVIEW = false;
-  try{ PREVIEW = localStorage.getItem(ADMIN_KEY) === PW_HASH; }catch(e){}
+  // LOGIN: Beim Öffnen kommt ein Passwortfeld.
+  //  - Emilys Passwort -> normaler Kalender (Groß/Kleinschreibung egal)
+  //  - Test-Passwort   -> Testmodus, alle Türchen offen
+  // Hier stehen nur SHA-256-Hashes, nicht die Passwörter selbst.
+  const EMILY_HASH = "d7b8988f8fd2edbd7c5a63ff60009a39f9cc9546f2ca1a5e8eafea8e2f2fa97b";
+  const PW_HASH    = "22825e94390e6d4855af965afa3f27e4cd90f7ef8010f3a45904a1008fcdd247";
+  const ADMIN_KEY = "advent-testmodus", LOGIN_KEY = "advent-login";
+  let PREVIEW = false, LOGGED = false;
+  try{
+    PREVIEW = localStorage.getItem(ADMIN_KEY) === PW_HASH;
+    LOGGED = PREVIEW || localStorage.getItem(LOGIN_KEY) === EMILY_HASH;
+  }catch(e){}
   async function sha256(s){
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
     return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
   }
-  document.getElementById("keyBtn").addEventListener("click", ()=>{
-    if (PREVIEW) return;
-    lastFocus = document.activeElement;
-    body.innerHTML = `<h2 id="mTitle">Testmodus</h2>
-      <form id="pwForm" autocomplete="off">
-        <input id="pwIn" type="password" placeholder="Passwort" class="pwin">
-        <button class="btn" type="submit">Öffnen</button>
-        <div class="feedback" id="pwFb"></div>
-      </form>`;
-    backdrop.classList.add("show");
-    document.body.style.overflow = "hidden";
-    setTimeout(()=>document.getElementById("pwIn").focus(), 50);
-    document.getElementById("pwForm").addEventListener("submit", async e=>{
-      e.preventDefault();
-      const fb = document.getElementById("pwFb");
-      let h = "";
-      try{ h = await sha256(document.getElementById("pwIn").value); }
-      catch(err){ fb.textContent = "Das geht in diesem Browser leider nicht."; return; }
-      if (h === PW_HASH){
-        try{ localStorage.setItem(ADMIN_KEY, h); }catch(err){}
-        location.reload();
-      } else fb.textContent = "Falsches Passwort 🐾";
-    });
+  if (LOGGED) document.body.classList.add("in");
+  else setTimeout(()=>{ try{ document.getElementById("gateIn").focus(); }catch(e){} }, 100);
+  document.getElementById("gateCard").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const fb = document.getElementById("gateFb");
+    const val = document.getElementById("gateIn").value;
+    let hAdmin = "", hEmily = "";
+    try{ hAdmin = await sha256(val); hEmily = await sha256(val.trim().toLowerCase()); }
+    catch(err){ fb.textContent = "Das geht in diesem Browser leider nicht."; return; }
+    if (hAdmin === PW_HASH){
+      try{ localStorage.setItem(ADMIN_KEY, hAdmin); }catch(err){}
+      location.reload();
+    } else if (hEmily === EMILY_HASH){
+      try{ localStorage.setItem(LOGIN_KEY, hEmily); }catch(err){}
+      document.body.classList.add("in");
+    } else {
+      fb.textContent = "Falsches Passwort 🐾";
+      const g = document.getElementById("gateCard");
+      g.classList.remove("shake"); void g.offsetWidth; g.classList.add("shake");
+    }
   });
 
   // Im Testmodus: ?datum=2026-12-15 simuliert ein Datum
@@ -350,6 +371,7 @@ const TAGE = [
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(opened)); }catch(e){} }
 
   const WOMBAT = document.getElementById("wombatSvg").outerHTML.replace('class="mascot"','').replace('id="wombatSvg"','');
+  document.getElementById("gateMascot").innerHTML = WOMBAT;
   const iconHTML = ic => ic === "wombat" ? WOMBAT : ic;
 
   // Status
@@ -357,7 +379,7 @@ const TAGE = [
   if (PREVIEW){
     document.getElementById("previewBadge").innerHTML = '<span class="preview-badge">Testmodus: alle Türchen offen<button id="logout">beenden</button></span>';
     document.getElementById("logout").addEventListener("click", ()=>{
-      try{ localStorage.removeItem(ADMIN_KEY); localStorage.removeItem(KEY); }catch(e){}
+      try{ localStorage.removeItem(ADMIN_KEY); localStorage.removeItem(LOGIN_KEY); localStorage.removeItem(KEY); }catch(e){}
       location.href = location.pathname;
     });
   }
