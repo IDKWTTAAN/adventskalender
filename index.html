@@ -177,17 +177,16 @@ const ABSENDER = "Lilian";
 const JAHR = 2026;
 
 const TAGE = [
-  { day:1, icon:"wombat", title:"Hallo Emily!",
-    html:`<p>Ab heute gibt's jeden Tag ein Türchen, direkt nach Paignton geliefert.</p>
-          <p>Versprochen: keine Spinnen, keine Horrorfilme, keine Leichenhalle. Bei Mathe kann ich nichts garantieren.</p>
-          <p>Dein Guide durch den Dezember ist <b>Wally, der Wombat</b>.</p>` },
-
-  { day:2, icon:"🐶", title:"Was ein Knuffi", type:"dog",
+  { day:1, icon:"🐶", title:"Was ein Knuffi", type:"dog",
     html:`<p>Hund des Tages. Jedes Mal ein anderer, einfach nochmal drücken.</p>` },
+
+  { day:2, icon:"wombat", title:"Darf ich vorstellen: Wally",
+    html:`<p>Das ist <b>Wally, der Wombat</b>. Er passt den ganzen Dezember auf deine Türchen auf.</p>
+          <p>Sein Job: keine Spinnen, keine Horrorfilme, keine Leichenhalle. Bei Mathe kann er nichts garantieren.</p>` },
 
   { day:3, icon:"🧮", title:"Training für die Mathearbeit", type:"quiz",
     question:"Kleines Aufwärmen für deinen ersten Schultag zuhause: Wie viel ist 7 + 8?",
-    options:["13","15","Kommt drauf an","Wer will meinen Untergang??"],
+    options:["13","15","Kommt drauf an","Ich ruf dich an und frag","Wer will meinen Untergang??"],
     answer:1,
     right:"Richtig! Mathe LK ist quasi sicher. 🎓",
     wrong:"Hmm. Wir müssen reden. 😅" },
