@@ -312,7 +312,8 @@ const TAGE = [
   // Hier stehen nur SHA-256-Hashes, nicht die Passwörter selbst.
   const EMILY_HASH = "d7b8988f8fd2edbd7c5a63ff60009a39f9cc9546f2ca1a5e8eafea8e2f2fa97b";
   const PW_HASH    = "22825e94390e6d4855af965afa3f27e4cd90f7ef8010f3a45904a1008fcdd247";
-  const ADMIN_KEY = "advent-testmodus", LOGIN_KEY = "advent-login";
+  const ADMIN_KEY = "advent-test-v2", LOGIN_KEY = "advent-login-v2";
+  try{ localStorage.removeItem("advent-testmodus"); localStorage.removeItem("advent-login"); }catch(e){}
   let PREVIEW = false, LOGGED = false;
   try{
     PREVIEW = localStorage.getItem(ADMIN_KEY) === PW_HASH;
