@@ -178,103 +178,118 @@ const JAHR = 2026;
 
 const TAGE = [
   { day:1, icon:"wombat", title:"Hallo Emily!",
-    html:`<p>Willkommen zu deinem Adventskalender! Ab heute gibt's jeden Tag ein Türchen – direkt nach Paignton geliefert, ganz ohne Royal Mail.</p>
-          <p>Dein Guide durch den Dezember: <b>Wally, der Wombat</b>. Er ist klein, flauschig und kann besser rechnen als du. (Sorry. Musste sein.)</p>` },
+    html:`<p>Ab heute gibt's jeden Tag ein Türchen, direkt nach Paignton geliefert.</p>
+          <p>Versprochen: keine Spinnen, keine Horrorfilme, keine Leichenhalle. Bei Mathe kann ich nichts garantieren.</p>
+          <p>Dein Guide durch den Dezember ist <b>Wally, der Wombat</b>.</p>` },
 
-  { day:2, icon:"🟫", title:"Wombat-Fakt #1",
-    html:`<p>Wombats sind die einzigen Tiere der Welt, die <b>würfelförmig kacken</b>. Echt jetzt.</p>
-          <p>Ein Wombat produziert also täglich perfekte Würfel. Du kriegst nicht mal einen Würfel Butter gerade geschnitten. 😌</p>` },
+  { day:2, icon:"🐶", title:"Was ein Knuffi", type:"dog",
+    html:`<p>Hund des Tages. Jedes Mal ein anderer, einfach nochmal drücken.</p>` },
 
-  { day:3, icon:"🧮", title:"Mathe-Check", type:"quiz",
-    question:"Kurzer Test, ob dein Gehirn im Advent-Modus ist: Wie viel ist 7 + 8?",
-    options:["13","15","Kommt drauf an","Ich ruf dich an und frag"],
+  { day:3, icon:"🧮", title:"Training für die Mathearbeit", type:"quiz",
+    question:"Kleines Aufwärmen für deinen ersten Schultag zuhause: Wie viel ist 7 + 8?",
+    options:["13","15","Kommt drauf an","Wer will meinen Untergang??"],
     answer:1,
-    right:"WAS?! Richtig! Das ist ein echtes Weihnachtswunder. 🎄",
-    wrong:"Knapp daneben ist auch vorbei. Tipp: Die richtige Zahl ist auch das Türchen mit dem Mathe-Nachhilfe-Gutschein. Zufall? 😏" },
+    right:"Richtig! Mathe LK ist quasi sicher. 🎓",
+    wrong:"Hmm. Wir müssen reden. 😅" },
 
-  { day:4, icon:"🐶", title:"Hunde-Fakt",
-    html:`<p>Die Nase eines Hundes hat ein ganz eigenes Muster – wie ein Fingerabdruck. <b>Keine zwei Hundenasen sind gleich.</b></p>
-          <p>Heißt: Jeder Hund, den du in England heimlich streichelst, ist ein Unikat. Du darfst also alle streicheln. Ist quasi Pflicht.</p>` },
+  { day:4, icon:"🍝", title:"Offizielle Lasagne-Bewertung",
+    html:`<p><b>Lasagne von Emily</b></p>
+          <ul>
+            <li>Bewertung laut Emily: „Vielleicht so minimal besser“ als jede Lasagne im Internet</li>
+            <li>Michelin-Sterne laut Emily: mindestens einer ⭐</li>
+            <li>Unabhängige Prüfung durch Lilian: <b>ausstehend</b></li>
+          </ul>
+          <p>Muss ich halt lowkey probieren.</p>` },
 
   { day:5, icon:"🌴", title:"Grüße an die English Riviera",
-    html:`<p>Wusstest du, dass Paignton, Torquay und Brixham zusammen <b>„English Riviera“</b> genannt werden?</p>
-          <p>Riviera. Mit Palmen. Bei 8 Grad und Seitenwind-Nieselregen. Die Briten haben einfach Humor. ☔🌴</p>` },
+    html:`<p>Paignton, Torquay und Brixham heißen zusammen <b>„English Riviera“</b>.</p>
+          <p>Riviera. Mit Palmen. Bei 8 Grad und Nieselregen. Die Briten haben einfach Humor. ☔🌴</p>` },
 
   { day:6, icon:"🎅", title:"Nikolaus-Gutschein",
-    html:`<p>Weil du dieses Jahr (fast) brav warst:</p>
-          <div class="coupon"><b>GUTSCHEIN</b><br>1× Snack deiner Wahl<br><span class="small">einlösbar bei mir, irgendwann</span></div>
-          <p class="small">Einlösbar bei mir. Keine Rückgabe, kein Umtausch, keine Diskussion.</p>` },
+    html:`<div class="coupon"><b>GUTSCHEIN</b><br>1× Film aussuchen<br><span class="small">garantiert kein Horror. Bibi und Tina ist erlaubt.</span></div>` },
 
   { day:7, icon:"🏋️", title:"Advents-Workout",
-    html:`<p>Gym heute? Hier ist dein offizielles Weihnachts-Workout:</p>
+    html:`<p>Gym heute? Dein offizielles Weihnachts-Workout:</p>
           <ul>
-            <li>24 Squats – eins für jedes Türchen</li>
-            <li>12 Liegestütze – für die 12 Tage of Christmas</li>
-            <li>3 × 30 Sek. Plank – für die heiligen drei Könige</li>
-            <li>1 Lebkuchen danach – für die Moral</li>
-          </ul>
-          <p class="small">Zählen darfst du mit den Fingern. Ich verrat's keinem.</p>` },
+            <li>24 Squats, eins für jedes Türchen</li>
+            <li>12 Liegestütze für die 12 Days of Christmas</li>
+            <li>3 × 30 Sek. Plank für die heiligen drei Könige</li>
+            <li>1 Lebkuchen danach für die Moral</li>
+          </ul>` },
 
   { day:8, icon:"🦘", title:"Baby-Känguru",
     html:`<p>Ein Baby-Känguru heißt <b>Joey</b>. Bei der Geburt ist es ungefähr so groß wie ein <b>Gummibärchen</b> und krabbelt dann ganz allein in Mamas Beutel.</p>
-          <p>Ein Gummibärchen-Känguru. Ich weiß. Ich weiß. 🥹</p>` },
+          <p>Ein Gummibärchen-Känguru. Ich weiß. 🥹</p>` },
 
-  { day:9, icon:"👩‍🍳", title:"Rezept für Profis (also dich)",
-    html:`<p><b>Heiße Schokolade à la Emily</b></p>
+  { day:9, icon:"🧁", title:"Muffins, nicht Muffouts",
+    html:`<p>Back-Anleitung, extra für dich:</p>
           <ol>
-            <li>Milch in einen Topf.</li>
-            <li>Herd an. (Der Knopf, nicht der Rauchmelder.)</li>
-            <li>2 EL Kakao + 1 EL Zucker rein, rühren.</li>
-            <li>Bevor's überkocht: Herd aus. Das ist der schwierige Teil.</li>
-            <li>Marshmallows oben drauf. Genießen.</li>
+            <li>Muffinform hinstellen. <b>Öffnungen nach oben.</b></li>
+            <li>Teig rein.</li>
+            <li>Nicht umdrehen. Wirklich nicht.</li>
+            <li>Ab in den Ofen.</li>
           </ol>
-          <p class="small">Wenn's klappt: Foto schicken als Beweis. 📸</p>` },
+          <p>Klappt auch ohne Trinken nicht immer, ich weiß. 😌</p>` },
 
   { day:10, icon:"⛵", title:"Segel-Quiz", type:"quiz",
-    question:"Ahoi Matrosin! Welche Seite eines Schiffs ist „Backbord“?",
+    question:"Ahoi! Welche Seite eines Schiffs ist „Backbord“?",
     options:["Links (in Fahrtrichtung)","Rechts (in Fahrtrichtung)","Die mit den Keksen"],
     answer:0,
     right:"Aye! Backbord = links, Steuerbord = rechts. Du darfst ans Ruder. ⚓",
-    wrong:"Leider nein – Backbord ist links, Steuerbord rechts. Gut, dass das Meer keine Matheprüfung ist. 🌊" },
+    wrong:"Leider nein, Backbord ist links. Gut, dass das Meer keine Matheprüfung ist. 🌊" },
 
-  { day:11, icon:"🏍️", title:"Motorrad-Weisheit",
-    html:`<p>„Vier Räder bewegen den Körper. <b>Zwei Räder bewegen die Seele.</b>“</p>
-          <p>Und in England fahren sie auch noch auf der falschen Seite. Also: Augen auf, wenn du da Moped fährst – und erst nach rechts gucken! 😄</p>` },
+  { day:11, icon:"🚦", title:"Theorieprüfung", type:"quiz",
+    question:"Frage 1 von 30, 5 Punkte: Wer hat hier Vorfahrt?",
+    options:["Das Auto von rechts","Das akustische Mobiliar auf unebenem Fahrbahnbelag 🎹","Mike"],
+    answer:1,
+    right:"Korrekt. Das Klavier hat immer Vorfahrt. Bestanden! 🎉",
+    wrong:"Durchgefallen. Herr Prüfer ist enttäuscht. 120 km rückwärts zurück zum Start." },
 
-  { day:12, icon:"🛡️", title:"Offizielle Entwarnung",
-    html:`<p>Hiermit wird feierlich bestätigt: Dieser Adventskalender ist <b>zu 100&nbsp;% achtbeinerfrei</b>.</p>
-          <p>Geprüft und versiegelt vom <b>Wombat-Sicherheitsdienst</b>. Wally hat jedes Türchen persönlich kontrolliert. Du kannst also ganz entspannt weiter klicken. 🐾</p>` },
+  { day:12, icon:"🛡️", title:"Gute-Nacht-Garantie",
+    html:`<p>Hiermit wird offiziell bestätigt, dass dieser Kalender frei ist von:</p>
+          <ul>
+            <li>Achtbeinern ✅</li>
+            <li>Horrorfilmen ✅</li>
+            <li>Umkleiden neben Leichenhallen ✅</li>
+          </ul>
+          <p>Du kannst also heute Nacht ganz beruhigt schlafen. Nur Mike ist noch irgendwo hier. Aber Mike macht nichts, ist nen super Typ.</p>` },
 
   { day:13, icon:"😊", title:"Das glücklichste Tier der Welt",
-    html:`<p>Das <b>Quokka</b> lebt in Westaustralien (vor allem auf Rottnest Island) und sieht so aus, als würde es <b>dauernd lächeln</b>.</p>
-          <p>Es ist ungefähr so groß wie eine Katze und hat absolut null Sorgen. Sei heute ein Quokka. 😊</p>` },
+    html:`<p>Das <b>Quokka</b> lebt in Westaustralien, vor allem auf Rottnest Island, und sieht aus, als würde es <b>dauernd lächeln</b>.</p>
+          <p>Ungefähr so groß wie eine Katze und absolut null Sorgen. Sei heute ein Quokka. 😊</p>` },
 
-  { day:14, icon:"🍪", title:"Textaufgabe",
-    html:`<p>Emily hat 10 Kekse. Sie isst 3 beim Backen, 2 fallen runter und 1 verbrennt.</p>
-          <p><b>Wie viele Kekse hat Emily?</b></p>
-          <p class="small">Lösung: Keine. Weil sie das Rezept falsch abgemessen hat und es nie Kekse wurden. 😇 (War nur Spaß. Größtenteils.)</p>` },
+  { day:14, icon:"📝", title:"Textaufgabe",
+    html:`<p>Emily kommt nach Hause. Am ersten Schultag schreibt sie eine Mathearbeit. In England hatte sie 0 Stunden Mathe.</p>
+          <p><b>Wie läuft die Arbeit?</b></p>
+          <ol type="a">
+            <li>Glatte 1</li>
+            <li>„So hallo???“</li>
+            <li>Mike schreibt sie für sie</li>
+          </ol>
+          <p>Lösung: c). Mike hat ja eh nichts zu tun.</p>` },
 
   { day:15, icon:"🎟️", title:"Gutschein",
-    html:`<div class="coupon"><b>GUTSCHEIN</b><br>1× Mathe-Nachhilfe<br><span class="small">inklusive extra viel Geduld und Snacks</span></div>
-          <p class="small">Alternativ eintauschbar gegen: 1× Kochstunde bei dir (ich bring den Feuerlöscher mit 🧯)</p>` },
+    html:`<div class="coupon"><b>GUTSCHEIN</b><br>1× Mathe-Nachhilfe vor der Arbeit<br><span class="small">inklusive extra viel Geduld</span></div>
+          <p>Alternativ eintauschbar gegen: 1 Stück Lasagne zur unabhängigen Prüfung. 🍝</p>` },
 
-  { day:16, icon:"🐨", title:"Koala-Mood",
+  { day:16, icon:"🐨", title:"Koala-Modus",
     html:`<p>Koalas schlafen bis zu <b>20 Stunden am Tag</b>, weil Eukalyptusblätter kaum Energie liefern.</p>
-          <p>Falls du heute also nicht ins Gym willst: Du bist einfach im Koala-Modus. Wissenschaftlich begründet. 🐨💤</p>` },
+          <p>Falls du heute nicht ins Gym willst: Du bist einfach im Koala-Modus. Wissenschaftlich begründet. 🐨💤</p>` },
 
-  { day:17, icon:"🐕", title:"Hund des Tages", type:"dog",
-    html:`<p>Ein zufälliger Hund, nur für dich. Jedes Mal ein anderer!</p>` },
+  { day:17, icon:"🏍️", title:"Motorrad-Weisheit",
+    html:`<p>„Vier Räder bewegen den Körper. <b>Zwei Räder bewegen die Seele.</b>“</p>
+          <p>In England fahren sie halt auf der falschen Seite. Also erst nach rechts gucken! 😄</p>` },
 
   { day:18, icon:"🇬🇧", title:"British Slang für Fortgeschrittene",
     html:`<ul>
-            <li><b>chuffed</b> – richtig happy („I'm chuffed to bits!“)</li>
-            <li><b>knackered</b> – fix und fertig (nach dem Gym)</li>
-            <li><b>cuppa</b> – eine Tasse Tee</li>
-            <li><b>gutted</b> – total enttäuscht</li>
+            <li><b>chuffed</b>: richtig happy</li>
+            <li><b>knackered</b>: fix und fertig (nach dem Gym)</li>
+            <li><b>cuppa</b>: eine Tasse Tee</li>
+            <li><b>gutted</b>: total enttäuscht (nach der Matheklausur)</li>
           </ul>
-          <p>Beispielsatz: „Totally knackered after the gym, need a cuppa.“ Du bist praktisch schon Britin. 🫖</p>` },
+          <p>„Totally knackered after the gym, need a cuppa.“ Du bist praktisch schon Britin. 🫖</p>` },
 
-  { day:19, icon:"wombat", title:"Wombat-Fakt #2",
+  { day:19, icon:"wombat", title:"Wombat-Fakt",
     html:`<p>Wombats sehen gemütlich aus, können aber auf kurzen Strecken bis zu <b>40 km/h</b> schnell rennen!</p>
           <p>Klein, knuffig, unterschätzt und plötzlich schneller als alle. Erinnert mich an jemanden. 😉</p>` },
 
@@ -283,24 +298,30 @@ const TAGE = [
           <p>Mehr Komplimente gibt's dieses Jahr nicht, also am besten Screenshot machen. 🙈</p>` },
 
   { day:21, icon:"🌊", title:"Kängurus können schwimmen",
-    html:`<p>Kängurus sind überraschend gute <b>Schwimmer</b> – und im Wasser können sie ihre Hinterbeine sogar einzeln bewegen, an Land hüpfen sie nur mit beiden gleichzeitig.</p>
-          <p>Also: Sollte dir beim Segeln mal ein Känguru begegnen – einfach freundlich winken. 🦘⛵</p>` },
+    html:`<p>Kängurus sind überraschend gute <b>Schwimmer</b>. Im Wasser können sie ihre Hinterbeine sogar einzeln bewegen, an Land hüpfen sie nur mit beiden gleichzeitig.</p>
+          <p>Falls dir beim Segeln mal eins begegnet: freundlich winken. 🦘⛵</p>` },
 
-  { day:22, icon:"✈️", title:"Countdown",
-    html:`<p>Nur noch <b>2 Türchen</b>! Selbst du kannst das ohne Taschenrechner ausrechnen. 🎉</p>
-          <p class="small">Hab sicherheitshalber zweimal nachgezählt. Für dich.</p>` },
+  { day:22, icon:"🎬", title:"Was Entspannteres",
+    html:`<p>Ich hab gesagt, ich lass mir was einfallen. Hier die garantiert traumafreie Filmliste:</p>
+          <ul>
+            <li><b>Paddington</b>: britisch, Bär, null Spinnen</li>
+            <li><b>Oben</b>: Ballons, Hund, Weinen nur in den ersten 10 Minuten</li>
+            <li><b>Bibi und Tina</b>: weil du ja so schwach bist 😌</li>
+          </ul>
+          <p>Und laut Jonas wird aktiv geschaut.</p>` },
 
   { day:23, icon:"🎄", title:"Fast geschafft",
-    html:`<p>Morgen ist Heiligabend! Zeit für ein kleines Fazit dieses Kalenders:</p>
+    html:`<p>Morgen ist Heiligabend! Kleines Fazit:</p>
           <ul>
             <li>Gelernte Tierfakten: viele</li>
-            <li>Gelöste Matheaufgaben: …wir reden nicht drüber</li>
-            <li>Gesichtete Achtbeiner: 0 ✅</li>
-            <li>Gestreichelte Hunde in England: hoffentlich viele</li>
+            <li>Gelöste Matheaufgaben: …reden wir nicht drüber</li>
+            <li>Gesichtete Spinnen: 0 ✅</li>
+            <li>Gesehene Horrorfilme: 0 ✅</li>
+            <li>Mike-Sichtungen: unklar</li>
           </ul>` },
 
   { day:24, icon:"🎁", title:"Frohe Weihnachten, Emily!", big:true,
-    html:`<p>24 Türchen, 0 Spinnen, ungefähr 3 gelöste Matheaufgaben – Mission erfüllt. 🎉</p>
+    html:`<p>24 Türchen, 0 Spinnen, ungefähr 3 gelöste Matheaufgaben. Mission erfüllt. 🎉</p>
           <p>Ich hoffe, der Kalender hat dir den Dezember in Paignton ein bisschen versüßt, auch wenn's draußen wahrscheinlich wieder nieselt.</p>
           <p>Danke für die ganzen Nachrichten und dafür, dass du auf jeden blöden Spruch von mir einen noch blöderen zurück hast. Bleib genau so.</p>
           <p>Frohe Weihnachten nach Paignton! 🎄🐶🦘</p>` },
