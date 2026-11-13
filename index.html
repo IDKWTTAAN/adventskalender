@@ -101,6 +101,9 @@ h1 span{color:var(--gold)}
 .photo{width:100%;border-radius:14px;margin:6px 0 12px;display:block}
 .sig{font-family:"Fredoka";font-weight:600;color:var(--red);margin-top:6px}
 footer{text-align:center;margin-top:30px;color:#9fb0c6;font-size:13px}
+.keybtn{margin-top:10px;width:44px;height:44px;border:0;background:none;font-size:18px;opacity:.25;cursor:pointer}
+.keybtn:hover{opacity:.7}
+.preview-badge button{border:0;background:none;font:inherit;text-decoration:underline;cursor:pointer;color:inherit;padding:0 0 0 6px}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -125,14 +128,14 @@ footer{text-align:center;margin-top:30px;color:#9fb0c6;font-size:13px}
       <ellipse cx="34" cy="92" rx="10" ry="5" fill="#6e523d"/><ellipse cx="86" cy="92" rx="10" ry="5" fill="#6e523d"/>
     </svg>
     <h1>Emilys <span>Adventskalender</span></h1>
-    <p class="sub">24 Türchen voller Hunde, Wombats und Kängurus. Und zu 100&nbsp;% spinnenfrei.</p>
     <div class="status" id="status"></div>
     <div id="previewBadge"></div>
   </header>
 
   <main class="grid" id="grid"></main>
 
-  <footer>Mit Liebe gebaut &middot; Gilt als Mathe-Hausaufgabe: 24 Türchen zählen</footer>
+  <footer>Mit Liebe gebaut &middot; Gilt als Mathe-Hausaufgabe: 24 Türchen zählen
+    <br><button id="keyBtn" class="keybtn" aria-label="Testmodus">🔑</button></footer>
 </div>
 
 <div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="mTitle">
@@ -284,11 +287,32 @@ const TAGE = [
 
 /* ======================= AB HIER: CODE ======================= */
 (function(){
+  // Testmodus: über den 🔑 unten auf der Seite mit Passwort freischalten.
+  // Es steht nur der SHA-256-Hash hier, nicht das Passwort selbst.
+  const PW_HASH = "22825e94390e6d4855af965afa3f27e4cd90f7ef8010f3a45904a1008fcdd247";
+  const ADMIN_KEY = "advent-testmodus";
+  let PREVIEW = false;
+  try{ PREVIEW = localStorage.getItem(ADMIN_KEY) === PW_HASH; }catch(e){}
+  async function sha256(s){
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
+  document.getElementById("keyBtn").addEventListener("click", async ()=>{
+    if (PREVIEW) return;
+    const pw = prompt("Passwort für den Testmodus:");
+    if (!pw) return;
+    let h = "";
+    try{ h = await sha256(pw); }catch(e){ alert("Das geht in diesem Browser nicht."); return; }
+    if (h === PW_HASH){
+      try{ localStorage.setItem(ADMIN_KEY, h); }catch(e){}
+      location.reload();
+    } else alert("Falsches Passwort 🐾");
+  });
+
+  // Im Testmodus: ?datum=2026-12-15 simuliert ein Datum
   const params = new URLSearchParams(location.search);
-  const PREVIEW = params.has("vorschau");
-  // Testdatum: ?datum=2026-12-15  (zum Ausprobieren)
   let NOW = new Date();
-  const d = params.get("datum");
+  const d = PREVIEW && params.get("datum");
   if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) NOW = new Date(d + "T12:00:00");
 
   // Datum in englischer Zeit (Emily ist in Paignton)
@@ -317,7 +341,11 @@ const TAGE = [
   // Status
   const status = document.getElementById("status");
   if (PREVIEW){
-    document.getElementById("previewBadge").innerHTML = '<span class="preview-badge">Vorschau-Modus: alle Türchen offen</span>';
+    document.getElementById("previewBadge").innerHTML = '<span class="preview-badge">Testmodus: alle Türchen offen<button id="logout">beenden</button></span>';
+    document.getElementById("logout").addEventListener("click", ()=>{
+      try{ localStorage.removeItem(ADMIN_KEY); localStorage.removeItem(KEY); }catch(e){}
+      location.href = location.pathname;
+    });
   }
   if (todayNum < doorNum(1)){
     const start = Date.UTC(JAHR,11,1), nowUtc = Date.UTC(t.y,t.m-1,t.d);
