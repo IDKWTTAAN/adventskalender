@@ -297,9 +297,11 @@ const TAGE = [
     html:`<p>Ganz offiziell und nur ein einziges Mal: <b>Du bist echt witzig.</b></p>
           <p>Mehr Komplimente gibt's dieses Jahr nicht, also am besten Screenshot machen. 🙈</p>` },
 
-  { day:21, icon:"🌊", title:"Kängurus können schwimmen",
-    html:`<p>Kängurus sind überraschend gute <b>Schwimmer</b>. Im Wasser können sie ihre Hinterbeine sogar einzeln bewegen, an Land hüpfen sie nur mit beiden gleichzeitig.</p>
-          <p>Falls dir beim Segeln mal eins begegnet: freundlich winken. 🦘⛵</p>` },
+  { day:21, icon:"🕶️", title:"Mike meldet sich", from:"Mike 👋",
+    html:`<p>Hi Emily. Ich bin's, <b>Mike</b>.</p>
+          <p>Du hast ja schon gefragt, wer zur Hölle ich eigentlich bin. Ehrlich gesagt: weiß ich auch nicht so genau.</p>
+          <p>Was ich weiß: Ich mach nichts. Ich bin nen super Typ. Und ich hab Lilian bei diesem Kalender geholfen (ich hab zugeguckt).</p>
+          <p>Viel Erfolg bei der Mathearbeit. Ich schreib sie übrigens nicht für dich, egal was in Türchen 14 stand.</p>` },
 
   { day:22, icon:"🎬", title:"Was Entspannteres",
     html:`<p>Ich hab gesagt, ich lass mir was einfallen. Hier die garantiert traumafreie Filmliste:</p>
@@ -307,8 +309,7 @@ const TAGE = [
             <li><b>Paddington</b>: britisch, Bär, null Spinnen</li>
             <li><b>Oben</b>: Ballons, Hund, Weinen nur in den ersten 10 Minuten</li>
             <li><b>Bibi und Tina</b>: weil du ja so schwach bist 😌</li>
-          </ul>
-          <p>Und laut Jonas wird aktiv geschaut.</p>` },
+          </ul>` },
 
   { day:23, icon:"🎄", title:"Fast geschafft",
     html:`<p>Morgen ist Heiligabend! Kleines Fazit:</p>
@@ -324,7 +325,8 @@ const TAGE = [
     html:`<p>24 Türchen, 0 Spinnen, ungefähr 3 gelöste Matheaufgaben. Mission erfüllt. 🎉</p>
           <p>Ich hoffe, der Kalender hat dir den Dezember in Paignton ein bisschen versüßt, auch wenn's draußen wahrscheinlich wieder nieselt.</p>
           <p>Danke für die ganzen Nachrichten und dafür, dass du auf jeden blöden Spruch von mir einen noch blöderen zurück hast. Bleib genau so.</p>
-          <p>Frohe Weihnachten nach Paignton! 🎄🐶🦘</p>` },
+          <p>Frohe Weihnachten nach Paignton! 🎄🐶🦘</p>
+          <p class="small">PS: Mike lässt grüßen.</p>` },
 ];
 
 /* ======================= AB HIER: CODE ======================= */
@@ -396,6 +398,19 @@ const TAGE = [
 
   const WOMBAT = document.getElementById("wombatSvg").outerHTML.replace('class="mascot"','').replace('id="wombatSvg"','');
   document.getElementById("gateMascot").innerHTML = WOMBAT;
+
+  // Easter Egg: Wombat oben antippen
+  const WALLY_SAYS = ["Ich bin Wally. Nicht Mike. 🐾","Mike??? Kenn ich nicht.","Okay, vielleicht kenn ich Mike.","Mike macht nichts. Ist nen super Typ."];
+  let wallyN = 0, wallyT = null;
+  const mascot = document.getElementById("wombatSvg");
+  mascot.style.cursor = "pointer";
+  mascot.addEventListener("click", ()=>{
+    const st = document.getElementById("status"), old = st.dataset.orig || st.textContent;
+    st.dataset.orig = old;
+    st.textContent = WALLY_SAYS[wallyN++ % WALLY_SAYS.length];
+    clearTimeout(wallyT);
+    wallyT = setTimeout(()=>{ st.textContent = st.dataset.orig; delete st.dataset.orig; }, 2500);
+  });
   const iconHTML = ic => ic === "wombat" ? WOMBAT : ic;
 
   // Status
@@ -467,7 +482,7 @@ const TAGE = [
             <p id="dogfail" class="small" style="display:none">Der Hund ist gerade Gassi. 🐕 Versuch's gleich nochmal!</p>
             <button class="btn" id="dogbtn">Noch ein Hund! 🐶</button>`;
     }
-    h += `<p class="sig">– ${ABSENDER}</p>`;
+    h += `<p class="sig">– ${day.from || ABSENDER}</p>`;
     body.innerHTML = h;
     backdrop.classList.add("show");
     document.body.style.overflow = "hidden";
