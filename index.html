@@ -154,7 +154,7 @@ body.in .gate{display:none}
 
   <main class="grid" id="grid"></main>
 
-  <footer>Mit Liebe gebaut &middot; Gilt als Mathe-Hausaufgabe: 24 Türchen zählen</footer>
+  <footer>Gebaut von Lilian &middot; Gilt als Mathe-Hausaufgabe: 24 Türchen zählen</footer>
 </div>
 
 <div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="mTitle">
@@ -173,7 +173,7 @@ body.in .gate{display:none}
    - type: "quiz" (mit question/options/answer/right/wrong) oder "dog"
    - Stellen mit ✏️ solltest du persönlich ausfüllen!
    ===================================================================== */
-const ABSENDER = "✏️ Dein Name";
+const ABSENDER = "Lilian";
 const JAHR = 2026;
 
 const TAGE = [
@@ -202,7 +202,7 @@ const TAGE = [
 
   { day:6, icon:"🎅", title:"Nikolaus-Gutschein",
     html:`<p>Weil du dieses Jahr (fast) brav warst:</p>
-          <div class="coupon"><b>GUTSCHEIN</b><br>✏️ z.&nbsp;B. „1× Lieblingssnacks, wenn du wieder da bist“</div>
+          <div class="coupon"><b>GUTSCHEIN</b><br>1× Snack deiner Wahl<br><span class="small">einlösbar bei mir, irgendwann</span></div>
           <p class="small">Einlösbar bei mir. Keine Rückgabe, kein Umtausch, keine Diskussion.</p>` },
 
   { day:7, icon:"🏋️", title:"Advents-Workout",
@@ -252,11 +252,11 @@ const TAGE = [
   { day:14, icon:"🍪", title:"Textaufgabe",
     html:`<p>Emily hat 10 Kekse. Sie isst 3 beim Backen, 2 fallen runter und 1 verbrennt.</p>
           <p><b>Wie viele Kekse hat Emily?</b></p>
-          <p class="small">Lösung: Keine. Weil sie das Rezept falsch abgemessen hat und es nie Kekse wurden. 😇 (Hab dich trotzdem lieb.)</p>` },
+          <p class="small">Lösung: Keine. Weil sie das Rezept falsch abgemessen hat und es nie Kekse wurden. 😇 (War nur Spaß. Größtenteils.)</p>` },
 
   { day:15, icon:"🎟️", title:"Gutschein",
     html:`<div class="coupon"><b>GUTSCHEIN</b><br>1× Mathe-Nachhilfe<br><span class="small">inklusive extra viel Geduld und Snacks</span></div>
-          <p class="small">Alternativ eintauschbar gegen: ✏️ (dein Vorschlag)</p>` },
+          <p class="small">Alternativ eintauschbar gegen: 1× Kochstunde bei dir (ich bring den Feuerlöscher mit 🧯)</p>` },
 
   { day:16, icon:"🐨", title:"Koala-Mood",
     html:`<p>Koalas schlafen bis zu <b>20 Stunden am Tag</b>, weil Eukalyptusblätter kaum Energie liefern.</p>
@@ -278,8 +278,9 @@ const TAGE = [
     html:`<p>Wombats sehen gemütlich aus, können aber auf kurzen Strecken bis zu <b>40 km/h</b> schnell rennen!</p>
           <p>Klein, knuffig, unterschätzt und plötzlich schneller als alle. Erinnert mich an jemanden. 😉</p>` },
 
-  { day:20, icon:"💌", title:"Kleine Nachricht",
-    html:`<p>✏️ Hier eine persönliche Nachricht oder ein Insider einfügen – z.&nbsp;B. eine Erinnerung an einen lustigen Moment.</p>` },
+  { day:20, icon:"📣", title:"Kurze Durchsage",
+    html:`<p>Ganz offiziell und nur ein einziges Mal: <b>Du bist echt witzig.</b></p>
+          <p>Mehr Komplimente gibt's dieses Jahr nicht, also am besten Screenshot machen. 🙈</p>` },
 
   { day:21, icon:"🌊", title:"Kängurus können schwimmen",
     html:`<p>Kängurus sind überraschend gute <b>Schwimmer</b> – und im Wasser können sie ihre Hinterbeine sogar einzeln bewegen, an Land hüpfen sie nur mit beiden gleichzeitig.</p>
@@ -287,7 +288,7 @@ const TAGE = [
 
   { day:22, icon:"✈️", title:"Countdown",
     html:`<p>Nur noch <b>2 Türchen</b>! Selbst du kannst das ohne Taschenrechner ausrechnen. 🎉</p>
-          <p>✏️ Optional: Hier passt ein gemeinsames Foto hin (siehe Anleitung).</p>` },
+          <p class="small">Hab sicherheitshalber zweimal nachgezählt. Für dich.</p>` },
 
   { day:23, icon:"🎄", title:"Fast geschafft",
     html:`<p>Morgen ist Heiligabend! Zeit für ein kleines Fazit dieses Kalenders:</p>
@@ -299,8 +300,9 @@ const TAGE = [
           </ul>` },
 
   { day:24, icon:"🎁", title:"Frohe Weihnachten, Emily!", big:true,
-    html:`<p>✏️ Hier kommt dein persönlicher Weihnachtsbrief hin – das wichtigste Türchen von allen.</p>
-          <p>Schreib, was du ihr wirklich sagen willst, ein paar Insider, und was du dir für die Zeit nach ihrem Auslandsjahr vornimmst.</p>
+    html:`<p>24 Türchen, 0 Spinnen, ungefähr 3 gelöste Matheaufgaben – Mission erfüllt. 🎉</p>
+          <p>Ich hoffe, der Kalender hat dir den Dezember in Paignton ein bisschen versüßt, auch wenn's draußen wahrscheinlich wieder nieselt.</p>
+          <p>Danke für die ganzen Nachrichten und dafür, dass du auf jeden blöden Spruch von mir einen noch blöderen zurück hast. Bleib genau so.</p>
           <p>Frohe Weihnachten nach Paignton! 🎄🐶🦘</p>` },
 ];
 
