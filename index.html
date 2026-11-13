@@ -417,7 +417,7 @@ const TAGE = [
            `</div><div class="feedback" id="fb"></div>`;
     }
     if (day.type === "dog"){
-      h += `<img class="dogimg" id="dogimg" alt="Ein zufälliger Hund" style="display:none">
+      h += `<div id="dogbox"></div>
             <p id="dogfail" class="small" style="display:none">Der Hund ist gerade Gassi. 🐕 Versuch's gleich nochmal!</p>
             <button class="btn" id="dogbtn">Noch ein Hund! 🐶</button>`;
     }
@@ -439,7 +439,9 @@ const TAGE = [
       }));
     }
     if (day.type === "dog"){
-      const img = document.getElementById("dogimg"), fail = document.getElementById("dogfail");
+      const img = new Image(), fail = document.getElementById("dogfail");
+      img.className = "dogimg"; img.alt = "Ein zufälliger Hund"; img.style.display = "none";
+      document.getElementById("dogbox").appendChild(img);
       const load = ()=>{
         fail.style.display="none";
         fetch("https://dog.ceo/api/breeds/image/random")
