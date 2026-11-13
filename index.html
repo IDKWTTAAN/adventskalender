@@ -113,6 +113,35 @@ body.in .gate{display:none}
 .gate-card.shake{animation:shake .4s}
 .pwin{width:100%;min-height:48px;border-radius:12px;border:2px solid #e3d3b8;padding:10px 14px;font:16px "Nunito";margin:6px 0 12px;background:#fff;color:var(--ink)}
 .preview-badge button{border:0;background:none;font:inherit;text-decoration:underline;cursor:pointer;color:inherit;padding:0 0 0 6px}
+
+/* Gutscheine */
+.layout{display:flex;flex-direction:column;gap:18px}
+.coupons[hidden]{display:none}
+.coupons{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:12px 12px 14px}
+.coupons h3{font-family:"Fredoka";font-weight:600;font-size:16px;margin:0 0 10px;color:var(--gold)}
+.cp-list{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:2px}
+.cp{flex:0 0 78%;max-width:260px;scroll-snap-align:start;background:var(--cream);color:var(--ink);border:2px dashed var(--red);border-radius:12px;padding:10px 12px}
+.cp-t{font-family:"Fredoka";font-weight:600;color:var(--red);font-size:15px;line-height:1.25}
+.cp-s{font-size:13px;line-height:1.4;margin-top:4px}
+.cp-d{font-size:11px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.05em}
+@media(min-width:980px){
+  .wrap{max-width:1200px}
+  .layout{display:grid;grid-template-columns:1fr 260px;align-items:start;gap:24px}
+  .layout .grid{grid-column:1;grid-row:1}
+  .coupons{grid-column:2;grid-row:1;position:sticky;top:20px}
+  .cp-list{flex-direction:column;overflow:visible}
+  .cp{flex:none;max-width:none}
+}
+/* Türchen-Extras */
+.opt{overflow-wrap:anywhere;hyphens:auto}
+.wheel{font-family:"Fredoka";font-weight:600;font-size:22px;text-align:center;background:#fff;border:3px solid #e3d3b8;border-radius:16px;padding:22px 12px;margin:10px 0 12px;min-height:76px;overflow-wrap:anywhere}
+.wheel.done{border-color:var(--gold);background:#fff8e1}
+.calc{display:grid;grid-template-columns:1fr 70px 1fr;gap:8px}
+.calc .pwin{margin:0 0 12px;padding:10px}
+.rate{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0;font-size:16px}
+.star{border:0;background:none;font-size:26px;color:var(--gold);cursor:pointer;padding:2px 3px;min-width:34px;min-height:40px}
+.credit{font-size:11px;color:var(--muted);margin:-4px 0 10px}
+textarea.pwin{resize:vertical;font-family:"Nunito"}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -152,7 +181,13 @@ body.in .gate{display:none}
     <div id="previewBadge"></div>
   </header>
 
-  <main class="grid" id="grid"></main>
+  <div class="layout">
+    <aside class="coupons" id="coupons" hidden>
+      <h3>🎟️ Deine Gutscheine</h3>
+      <div class="cp-list" id="couponList"></div>
+    </aside>
+    <main class="grid" id="grid"></main>
+  </div>
 
   <footer>Gebaut von Lilian &middot; Gilt als Mathe-Hausaufgabe: 24 Türchen zählen</footer>
 </div>
@@ -170,11 +205,19 @@ body.in .gate{display:none}
    - ABSENDER: wie du unterschreibst
    - Jeder Tag: icon (Emoji), title, html (Text, darf <p>, <b>, <ul> usw.)
    - Optional: photo: "bilder/tag5.jpg"  (Bild in den Ordner "bilder" legen)
-   - type: "quiz" (mit question/options/answer/right/wrong) oder "dog"
+   - type: quiz, dog, gallery, wheel, calc, biker, trailer, rating, suggest
+   - coupon: {title, text} -> landet in der Gutschein-Leiste
    - Stellen mit ✏️ solltest du persönlich ausfüllen!
    ===================================================================== */
 const ABSENDER = "Lilian";
 const JAHR = 2026;
+
+const KAENGURU = [1,2,3,4,5,6].map(i=>"bilder/kaenguru"+i+".jpg");
+const KAENGURU_C = ["SuperJew, CC BY-SA 3.0","SuperJew, CC BY-SA 3.0","SuperJew, CC BY-SA 3.0","825545, CC0","PublicDomainPictures, CC0","SuperJew, CC BY-SA 3.0"];
+const QUOKKA = [1,2,3,4,5,6].map(i=>"bilder/quokka"+i+".jpg");
+const QUOKKA_C = ["SKY-PuLeun, CC BY-SA 4.0","Hesperian, CC BY 3.0","Christophe95, CC BY-SA 4.0","Christophe95, CC BY-SA 4.0","May Wong, CC BY 2.0","Josefma, CC BY-SA 4.0"];
+const KOALA = [1,2,3,4,5,6].map(i=>"bilder/koala"+i+".jpg");
+const KOALA_C = ["Benjamint444, CC BY-SA 3.0","National Media Museum, gemeinfrei","Sanjay ach, CC BY-SA 3.0","Dinkum, CC0","Diliff, CC BY-SA 3.0","AggieNie, CC BY-SA 4.0"];
 
 const TAGE = [
   { day:1, icon:"🐶", title:"Was ein Knuffi", type:"dog",
@@ -188,8 +231,7 @@ const TAGE = [
     question:"Kleines Aufwärmen für deinen ersten Schultag zuhause: Wie viel ist 7 + 8?",
     options:["13","15","Kommt drauf an","Ich ruf dich an und frag","Wer will meinen Untergang??"],
     answer:1,
-    right:"Richtig! Mathe LK ist quasi sicher. 🎓",
-    wrong:"Hmm. Wir müssen reden. 😅" },
+    feedbacks:["Wie bitte????","Richtig! Mathe LK ist quasi sicher. 🎓","Worauf denn bitte???","Ich geh ran. Verraten tu ich's trotzdem nicht. 📞","Mike."] },
 
   { day:4, icon:"🍝", title:"Offizielle Lasagne-Bewertung",
     html:`<p><b>Lasagne von Emily</b></p>
@@ -198,133 +240,111 @@ const TAGE = [
             <li>Michelin-Sterne laut Emily: mindestens einer ⭐</li>
             <li>Unabhängige Prüfung durch Lilian: <b>ausstehend</b></li>
           </ul>
-          <p>Muss ich halt lowkey probieren.</p>` },
+          <p>Muss ich halt immer noch probieren.</p>` },
 
-  { day:5, icon:"🌴", title:"Grüße an die English Riviera",
-    html:`<p>Paignton, Torquay und Brixham heißen zusammen <b>„English Riviera“</b>.</p>
-          <p>Riviera. Mit Palmen. Bei 8 Grad und Nieselregen. Die Briten haben einfach Humor. ☔🌴</p>` },
+  { day:5, icon:"🗣️", title:"Wer hat's gesagt?", type:"quiz",
+    question:"„Willst du mich irgendwie traumatisieren?“",
+    options:["Emily","Mike","Bibi und Tina"],
+    answer:0,
+    feedbacks:["Natürlich du. Wegen eines Trailers. 😌","Mike traumatisiert niemanden. Mike macht nichts.","Die würden sowas nie sagen. Die haben vor nichts Angst."] },
 
   { day:6, icon:"🎅", title:"Nikolaus-Gutschein",
-    html:`<div class="coupon"><b>GUTSCHEIN</b><br>1× Film aussuchen<br><span class="small">garantiert kein Horror. Bibi und Tina ist erlaubt.</span></div>` },
+    coupon:{ title:"1× Film aussuchen", text:"Bitte wähl Horror aus." } },
 
-  { day:7, icon:"🏋️", title:"Advents-Workout",
-    html:`<p>Gym heute? Dein offizielles Weihnachts-Workout:</p>
-          <ul>
-            <li>24 Squats, eins für jedes Türchen</li>
-            <li>12 Liegestütze für die 12 Days of Christmas</li>
-            <li>3 × 30 Sek. Plank für die heiligen drei Könige</li>
-            <li>1 Lebkuchen danach für die Moral</li>
-          </ul>` },
+  { day:7, icon:"🎡", title:"Glücksrad", type:"wheel",
+    html:`<p>Keine Ahnung, was du heute machen sollst? Das Glücksrad entscheidet.</p>`,
+    options:["Gym 💪","Hunde streicheln 🐶","Lasagne kochen 🍝","Koala-Modus 💤","Gar nichts (wie Mike)","Mich anrufen 📞"] },
 
-  { day:8, icon:"🦘", title:"Baby-Känguru",
-    html:`<p>Ein Baby-Känguru heißt <b>Joey</b>. Bei der Geburt ist es ungefähr so groß wie ein <b>Gummibärchen</b> und krabbelt dann ganz allein in Mamas Beutel.</p>
-          <p>Ein Gummibärchen-Känguru. Ich weiß. 🥹</p>` },
+  { day:8, icon:"🦘", title:"Joey-Alarm", type:"gallery",
+    html:`<p>Baby-Kängurus heißen <b>Joeys</b>. Mehr muss man dazu nicht sagen.</p>`,
+    images:KAENGURU, credits:KAENGURU_C, button:"Noch ein Joey! 🦘" },
 
-  { day:9, icon:"🧁", title:"Muffins, nicht Muffouts",
-    html:`<p>Back-Anleitung, extra für dich:</p>
-          <ol>
-            <li>Muffinform hinstellen. <b>Öffnungen nach oben.</b></li>
-            <li>Teig rein.</li>
-            <li>Nicht umdrehen. Wirklich nicht.</li>
-            <li>Ab in den Ofen.</li>
-          </ol>
-          <p>Klappt auch ohne Trinken nicht immer, ich weiß. 😌</p>` },
+  { day:9, icon:"🕵️", title:"Zwei Wahrheiten, eine Lüge", type:"quiz",
+    question:"Welche Aussage über Wombats ist gelogen?",
+    options:["Wombats können bis zu 40 km/h schnell rennen","Der Beutel von Wombats öffnet sich nach hinten","Wombats machen Winterschlaf in Baumkronen"],
+    answer:2,
+    feedbacks:["Stimmt tatsächlich! Die sind schneller, als sie aussehen.","Stimmt wirklich! So kommt beim Buddeln keine Erde rein.","Erwischt! Wombats klettern nicht auf Bäume, die buddeln lieber. 🐾"] },
 
-  { day:10, icon:"⛵", title:"Segel-Quiz", type:"quiz",
-    question:"Ahoi! Welche Seite eines Schiffs ist „Backbord“?",
-    options:["Links (in Fahrtrichtung)","Rechts (in Fahrtrichtung)","Die mit den Keksen"],
+  { day:10, icon:"🍿", title:"Emoji-Kino", type:"quiz",
+    question:"Welcher Film ist das? 🐻🧥🍊🇬🇧",
+    options:["Paddington","Bibi und Tina","Ein Horrorfilm"],
     answer:0,
-    right:"Aye! Backbord = links, Steuerbord = rechts. Du darfst ans Ruder. ⚓",
-    wrong:"Leider nein, Backbord ist links. Gut, dass das Meer keine Matheprüfung ist. 🌊" },
+    feedbacks:["Richtig! Bär, Mantel, Orangenmarmelade, London. 🍊","Knapp. Da wär's ein Pferd. 🐴","Schön, dass du Interesse zeigst. Aber nein. 😏"] },
 
   { day:11, icon:"🚦", title:"Theorieprüfung", type:"quiz",
     question:"Frage 1 von 30, 5 Punkte: Wer hat hier Vorfahrt?",
-    options:["Das Auto von rechts","Das akustische Mobiliar auf unebenem Fahrbahnbelag 🎹","Mike"],
+    options:["Das Auto von rechts","Das wasserstoffbetriebene Hochgeschwindigkeitsbadewannenpersonenbeförderungsfahrzeug mit Gummientennavigationssystem 🛁","Mike"],
     answer:1,
-    right:"Korrekt. Das Klavier hat immer Vorfahrt. Bestanden! 🎉",
-    wrong:"Durchgefallen. Herr Prüfer ist enttäuscht. 120 km rückwärts zurück zum Start." },
+    feedbacks:["Durchgefallen. Herr Prüfer ist enttäuscht. 120 km rückwärts zurück zum Start.","Korrekt. Die Badewanne hat immer Vorfahrt. Bestanden! 🎉","Also kannst du ihn doch schon sehen?"] },
 
-  { day:12, icon:"🛡️", title:"Gute-Nacht-Garantie",
-    html:`<p>Hiermit wird offiziell bestätigt, dass dieser Kalender frei ist von:</p>
+  { day:12, icon:"🔦", title:"Gute-Nacht-Kontrolle",
+    html:`<p>Wally hat heute dein Zimmer kontrolliert, damit du ganz beruhigt schlafen kannst:</p>
           <ul>
-            <li>Achtbeinern ✅</li>
-            <li>Horrorfilmen ✅</li>
-            <li>Umkleiden neben Leichenhallen ✅</li>
+            <li>Unterm Bett: nichts ✅</li>
+            <li>Im Schrank: nichts ✅</li>
+            <li>Hinterm Vorhang: nichts ✅</li>
+            <li>In der Ecke: … Mike.</li>
           </ul>
-          <p>Du kannst also heute Nacht ganz beruhigt schlafen. Nur Mike ist noch irgendwo hier. Aber Mike macht nichts, ist nen super Typ.</p>` },
+          <p>Aber Mike macht nichts, ist nen super Typ. Gute Nacht! 🌙</p>` },
 
-  { day:13, icon:"😊", title:"Das glücklichste Tier der Welt",
-    html:`<p>Das <b>Quokka</b> lebt in Westaustralien, vor allem auf Rottnest Island, und sieht aus, als würde es <b>dauernd lächeln</b>.</p>
-          <p>Ungefähr so groß wie eine Katze und absolut null Sorgen. Sei heute ein Quokka. 😊</p>` },
+  { day:13, icon:"😊", title:"Quokka-Pause", type:"gallery",
+    html:`<p>Quokkas sehen aus, als würden sie <b>dauernd lächeln</b>. Ansteckend.</p>`,
+    images:QUOKKA, credits:QUOKKA_C, button:"Noch ein Quokka! 😊" },
 
-  { day:14, icon:"📝", title:"Textaufgabe",
-    html:`<p>Emily kommt nach Hause. Am ersten Schultag schreibt sie eine Mathearbeit. In England hatte sie 0 Stunden Mathe.</p>
-          <p><b>Wie läuft die Arbeit?</b></p>
-          <ol type="a">
-            <li>Glatte 1</li>
-            <li>„So hallo???“</li>
-            <li>Mike schreibt sie für sie</li>
-          </ol>
-          <p>Lösung: c). Mike hat ja eh nichts zu tun.</p>` },
+  { day:14, icon:"🧮", title:"Mathe-Notfall-Rechner", type:"calc",
+    html:`<p>Für alle Fälle. Gib zwei Zahlen ein, ich rechne für dich.</p>` },
 
   { day:15, icon:"🎟️", title:"Gutschein",
-    html:`<div class="coupon"><b>GUTSCHEIN</b><br>1× Mathe-Nachhilfe vor der Arbeit<br><span class="small">inklusive extra viel Geduld</span></div>
-          <p>Alternativ eintauschbar gegen: 1 Stück Lasagne zur unabhängigen Prüfung. 🍝</p>` },
+    coupon:{ title:"1× Mathe-Rettung", text:"Einlösbar per Anruf vor deiner nächsten Arbeit. „Ich ruf dich an und frag“ gilt ab jetzt ganz offiziell." } },
 
-  { day:16, icon:"🐨", title:"Koala-Modus",
-    html:`<p>Koalas schlafen bis zu <b>20 Stunden am Tag</b>, weil Eukalyptusblätter kaum Energie liefern.</p>
-          <p>Falls du heute nicht ins Gym willst: Du bist einfach im Koala-Modus. Wissenschaftlich begründet. 🐨💤</p>` },
+  { day:16, icon:"🐨", title:"Koala-Modus", type:"gallery",
+    html:`<p>Koalas schlafen bis zu <b>20 Stunden am Tag</b>. Ein Vorbild.</p>`,
+    images:KOALA, credits:KOALA_C, button:"Noch ein Koala! 🐨" },
 
-  { day:17, icon:"🏍️", title:"Motorrad-Weisheit",
-    html:`<p>„Vier Räder bewegen den Körper. <b>Zwei Räder bewegen die Seele.</b>“</p>
-          <p>In England fahren sie halt auf der falschen Seite. Also erst nach rechts gucken! 😄</p>` },
+  { day:17, icon:"🏍️", title:"Dein Biker-Name", type:"biker",
+    html:`<p>Jede echte Bikerin braucht einen Namen. Lass dir einen geben:</p>` },
 
-  { day:18, icon:"🇬🇧", title:"British Slang für Fortgeschrittene",
-    html:`<ul>
-            <li><b>chuffed</b>: richtig happy</li>
-            <li><b>knackered</b>: fix und fertig (nach dem Gym)</li>
-            <li><b>cuppa</b>: eine Tasse Tee</li>
-            <li><b>gutted</b>: total enttäuscht (nach der Matheklausur)</li>
-          </ul>
-          <p>„Totally knackered after the gym, need a cuppa.“ Du bist praktisch schon Britin. 🫖</p>` },
+  { day:18, icon:"🌙", title:"Gutschein",
+    coupon:{ title:"1× Anruf, wenn's nachts im dunklen Zimmer zu gruselig wird", text:"Gilt rund um die Uhr. Auch wegen Mike." } },
 
-  { day:19, icon:"wombat", title:"Wombat-Fakt",
-    html:`<p>Wombats sehen gemütlich aus, können aber auf kurzen Strecken bis zu <b>40 km/h</b> schnell rennen!</p>
-          <p>Klein, knuffig, unterschätzt und plötzlich schneller als alle. Erinnert mich an jemanden. 😉</p>` },
+  { day:19, icon:"🎬", title:"Neuer Trailer", type:"trailer",
+    html:`<p>Ich hab einen Trailer für unseren Filmabend gefunden. Ist nur ganz kurz.</p>` },
 
-  { day:20, icon:"📣", title:"Kurze Durchsage",
-    html:`<p>Ganz offiziell und nur ein einziges Mal: <b>Du bist echt witzig.</b></p>
-          <p>Mehr Komplimente gibt's dieses Jahr nicht, also am besten Screenshot machen. 🙈</p>` },
+  { day:20, icon:"📋", title:"Dein England-Zeugnis", type:"rating",
+    html:`<p>Bevor's nach Hause geht: Bitte bewerte dein Auslandsjahr.</p>`,
+    cats:["Wetter ☔","Essen 🍽️","Hunde 🐶","Schule 📚"] },
 
-  { day:21, icon:"🕶️", title:"Mike meldet sich", from:"Mike 👋",
-    html:`<p>Hi Emily. Ich bin's, <b>Mike</b>.</p>
-          <p>Du hast ja schon gefragt, wer zur Hölle ich eigentlich bin. Ehrlich gesagt: weiß ich auch nicht so genau.</p>
-          <p>Was ich weiß: Ich mach nichts. Ich bin nen super Typ. Und ich hab Lilian bei diesem Kalender geholfen (ich hab zugeguckt).</p>
-          <p>Viel Erfolg bei der Mathearbeit. Ich schreib sie übrigens nicht für dich, egal was in Türchen 14 stand.</p>` },
-
-  { day:22, icon:"🎬", title:"Was Entspannteres",
-    html:`<p>Ich hab gesagt, ich lass mir was einfallen. Hier die garantiert traumafreie Filmliste:</p>
+  { day:21, icon:"🕶️", title:"Mike stellt sich vor", from:"Mike 👋",
+    html:`<p>Hi Emily, Mike hier. Wird Zeit, dass ich mich mal richtig vorstelle.</p>
           <ul>
-            <li><b>Paddington</b>: britisch, Bär, null Spinnen</li>
-            <li><b>Oben</b>: Ballons, Hund, Weinen nur in den ersten 10 Minuten</li>
-            <li><b>Bibi und Tina</b>: weil du ja so schwach bist 😌</li>
-          </ul>` },
+            <li><b>Name:</b> Mike</li>
+            <li><b>Alter:</b> unklar</li>
+            <li><b>Wohnort:</b> Sprachnachrichten</li>
+            <li><b>Hobbys:</b> nichts machen</li>
+            <li><b>Kann man mich sehen?</b> Kommt drauf an</li>
+            <li><b>Lieblingsessen:</b> deine Lasagne (noch nicht probiert, aber viel gehört)</li>
+          </ul>
+          <p>Ich mach nichts. Ich bin nen super Typ. Grüß Wally von mir.</p>` },
+
+  { day:22, icon:"🎥", title:"Was Entspannteres", type:"suggest",
+    html:`<p>Du darfst den Film aussuchen. Schreib hier deine Vorschläge rein:</p>` },
 
   { day:23, icon:"🎄", title:"Fast geschafft",
-    html:`<p>Morgen ist Heiligabend! Kleines Fazit:</p>
+    html:`<p>Morgen ist Heiligabend! Die Bilanz:</p>
           <ul>
-            <li>Gelernte Tierfakten: viele</li>
-            <li>Gelöste Matheaufgaben: …reden wir nicht drüber</li>
+            <li>Gesehene Hunde: unendlich</li>
+            <li>Gelöste Matheaufgaben: 1 (mit Taschenrechner)</li>
             <li>Gesichtete Spinnen: 0 ✅</li>
-            <li>Gesehene Horrorfilme: 0 ✅</li>
-            <li>Mike-Sichtungen: unklar</li>
+            <li>Gesehene Horrorfilme: 0 (noch 😏)</li>
+            <li>Probierte Lasagne: 0 (muss sich ändern)</li>
+            <li>Mike-Sichtungen: zu viele</li>
           </ul>` },
 
   { day:24, icon:"🎁", title:"Frohe Weihnachten, Emily!", big:true,
-    html:`<p>24 Türchen, 0 Spinnen, ungefähr 3 gelöste Matheaufgaben. Mission erfüllt. 🎉</p>
-          <p>Ich hoffe, der Kalender hat dir den Dezember in Paignton ein bisschen versüßt, auch wenn's draußen wahrscheinlich wieder nieselt.</p>
-          <p>Danke für die ganzen Nachrichten und dafür, dass du auf jeden blöden Spruch von mir einen noch blöderen zurück hast. Bleib genau so.</p>
-          <p>Frohe Weihnachten nach Paignton! 🎄🐶🦘</p>
+    html:`<p>24 Türchen, 0 Spinnen, ungefähr eine gelöste Matheaufgabe.</p>
+          <p>Ich hoffe, der Kalender hat dir den Dezember ein bisschen versüßt.</p>
+          <p>Schön, dass du wieder da bist. Jetzt kann die Lasagne-Prüfung ja endlich stattfinden. 🍝</p>
+          <p>Frohe Weihnachten! 🎄</p>
           <p class="small">PS: Mike lässt grüßen.</p>` },
 ];
 
@@ -464,6 +484,19 @@ const TAGE = [
   const backdrop = document.getElementById("backdrop");
   const body = document.getElementById("mBody");
   let lastFocus = null;
+  // Gutscheine (rechts neben dem Kalender, am Handy oben drüber)
+  const couponList = document.getElementById("couponList"), couponBox = document.getElementById("coupons");
+  function couponHTML(c){ return `<div class="coupon"><b>GUTSCHEIN</b><br>${c.title}<br><span class="small">${c.text}</span></div>`; }
+  function renderCoupons(){
+    const got = TAGE.filter(x=>x.coupon && opened[x.day] && isOpenable(x.day));
+    couponBox.hidden = !got.length;
+    couponList.innerHTML = got.map(x=>`<div class="cp"><div class="cp-t">${x.coupon.title}</div><div class="cp-s">${x.coupon.text}</div><div class="cp-d">Türchen ${x.day}</div></div>`).join("");
+  }
+  renderCoupons();
+
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  const esc = s => s.replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
   function openModal(day){
     lastFocus = document.activeElement;
     let h = `<div class="m-day">${day.day}. Dezember</div>
@@ -471,15 +504,48 @@ const TAGE = [
              <h2 id="mTitle">${day.title}</h2>`;
     if (day.photo) h += `<img class="photo" src="${day.photo}" alt="" onerror="this.remove()">`;
     if (day.html) h += day.html;
-    if (day.type === "quiz"){
-      h += `<p>${day.question}</p><div class="opts">` +
+    if (day.coupon) h += couponHTML(day.coupon) + `<p class="small">Liegt ab jetzt bei deinen Gutscheinen.</p>`;
+    const T = day.type;
+    if (T === "quiz"){
+      h += `<p><b>${day.question}</b></p><div class="opts">` +
            day.options.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join("") +
            `</div><div class="feedback" id="fb"></div>`;
     }
-    if (day.type === "dog"){
+    if (T === "dog"){
       h += `<div id="dogbox"></div>
             <p id="dogfail" class="small" style="display:none">Der Hund ist gerade Gassi. 🐕 Versuch's gleich nochmal!</p>
             <button class="btn" id="dogbtn">Noch ein Hund! 🐶</button>`;
+    }
+    if (T === "gallery"){
+      h += `<div id="galbox"></div><p class="credit" id="galcred"></p><button class="btn" id="galbtn">${day.button}</button>`;
+    }
+    if (T === "wheel"){
+      h += `<div class="wheel" id="wheel">?</div><button class="btn" id="wheelbtn">Drehen 🎡</button>`;
+    }
+    if (T === "calc"){
+      h += `<div class="calc">
+              <input id="ca" type="number" inputmode="decimal" class="pwin" placeholder="Zahl 1">
+              <select id="cop" class="pwin"><option>+</option><option>−</option><option>×</option><option>÷</option></select>
+              <input id="cb" type="number" inputmode="decimal" class="pwin" placeholder="Zahl 2">
+            </div>
+            <button class="btn" id="cbtn">Ausrechnen</button>
+            <div class="feedback" id="cres"></div>`;
+    }
+    if (T === "biker"){
+      h += `<div class="wheel" id="biker">Emily „…“</div><button class="btn" id="bikerbtn">Namen geben 🏍️</button>`;
+    }
+    if (T === "trailer"){
+      h += `<div id="trbox"><p id="trtxt"></p><button class="btn" id="trbtn">Trailer ansehen ▶️</button></div>`;
+    }
+    if (T === "rating"){
+      h += day.cats.map((c,i)=>`<div class="rate"><span>${c}</span><span class="stars" data-c="${i}">` +
+             [1,2,3,4,5].map(s=>`<button class="star" data-s="${s}" aria-label="${s} Sterne">☆</button>`).join("") +
+           `</span></div>`).join("") +
+           `<button class="btn" id="ratebtn">Zeugnis abschicken</button><div class="feedback" id="ratefb"></div>`;
+    }
+    if (T === "suggest"){
+      h += `<textarea id="sugg" class="pwin" rows="4" placeholder="Meine Filmvorschläge…"></textarea>
+            <button class="btn" id="suggbtn">Abschicken</button><div class="feedback" id="suggfb"></div>`;
     }
     h += `<p class="sig">– ${day.from || ABSENDER}</p>`;
     body.innerHTML = h;
@@ -487,21 +553,23 @@ const TAGE = [
     document.body.style.overflow = "hidden";
     document.getElementById("modal").scrollTop = 0;
     document.getElementById("closeBtn").focus();
+    if (day.coupon) renderCoupons();
+    const $ = id => document.getElementById(id);
 
-    if (day.type === "quiz"){
-      const fb = document.getElementById("fb");
+    if (T === "quiz"){
+      const fb = $("fb");
       body.querySelectorAll(".opt").forEach(btn=>btn.addEventListener("click",()=>{
-        const i = +btn.dataset.i;
+        const i = +btn.dataset.i, ok = i===day.answer;
         body.querySelectorAll(".opt").forEach(x=>x.classList.remove("right","wrong"));
-        btn.classList.add(i===day.answer ? "right" : "wrong");
-        fb.textContent = i===day.answer ? day.right : day.wrong;
-        if (i===day.answer) confetti();
+        btn.classList.add(ok ? "right" : "wrong");
+        fb.textContent = day.feedbacks ? day.feedbacks[i] : (ok ? day.right : day.wrong);
+        if (ok) confetti();
       }));
     }
-    if (day.type === "dog"){
-      const img = new Image(), fail = document.getElementById("dogfail");
+    if (T === "dog"){
+      const img = new Image(), fail = $("dogfail");
       img.className = "dogimg"; img.alt = "Ein zufälliger Hund"; img.style.display = "none";
-      document.getElementById("dogbox").appendChild(img);
+      $("dogbox").appendChild(img);
       const load = ()=>{
         fail.style.display="none";
         fetch("https://dog.ceo/api/breeds/image/random")
@@ -509,8 +577,84 @@ const TAGE = [
           .catch(()=>{ img.style.display="none"; fail.style.display="block"; });
       };
       img.onerror = ()=>{ img.style.display="none"; fail.style.display="block"; };
-      document.getElementById("dogbtn").addEventListener("click", load);
+      $("dogbtn").addEventListener("click", load);
       load();
+    }
+    if (T === "gallery"){
+      const img = new Image(); img.className = "dogimg"; img.alt = day.title;
+      $("galbox").appendChild(img);
+      let i = Math.floor(Math.random()*day.images.length);
+      const show = ()=>{ img.src = day.images[i]; $("galcred").textContent = "Foto: " + day.credits[i] + " (Wikimedia Commons)"; };
+      $("galbtn").addEventListener("click", ()=>{ i = (i+1) % day.images.length; show(); });
+      show();
+    }
+    if (T === "wheel"){
+      const w = $("wheel"); let spinning = false;
+      $("wheelbtn").addEventListener("click", ()=>{
+        if (spinning) return; spinning = true; w.classList.remove("done");
+        let n = 0, delay = 50, idx = Math.floor(Math.random()*day.options.length);
+        const total = 18 + Math.floor(Math.random()*day.options.length);
+        const step = ()=>{
+          idx = (idx+1) % day.options.length; w.textContent = day.options[idx]; n++;
+          if (n < total){ delay *= 1.12; setTimeout(step, delay); }
+          else { spinning = false; w.classList.add("done"); confetti(); }
+        };
+        step();
+      });
+    }
+    if (T === "calc"){
+      const quips = ["Gern geschehen.","Mike hat mitgerechnet.","In der Arbeit darfst du den leider nicht benutzen.","Hätte ich dir auch am Telefon sagen können."];
+      $("cbtn").addEventListener("click", ()=>{
+        const a = parseFloat($("ca").value), b = parseFloat($("cb").value), op = $("cop").value, r = $("cres");
+        if (isNaN(a) || isNaN(b)){ r.textContent = "Da fehlt noch eine Zahl. Wie bitte????"; return; }
+        if (op === "÷" && b === 0){ r.textContent = "Durch 0? Nicht mal Mike kann das."; return; }
+        let x = op==="+" ? a+b : op==="−" ? a-b : op==="×" ? a*b : a/b;
+        x = Math.round(x*1000)/1000;
+        r.textContent = `= ${String(x).replace(".",",")}. ${pick(quips)}`;
+      });
+    }
+    if (T === "biker"){
+      const A = ["Turbo","Donner","Midnight","Stahl","Knuffi","Wilde","Blitz","Vollgas"];
+      const B = ["Wombat","Joey","Quokka","Lasagne","Koala","Badewanne","Gummibärchen","Mike"];
+      $("bikerbtn").addEventListener("click", ()=>{ $("biker").textContent = `Emily „${pick(A)}-${pick(B)}“`; $("biker").classList.add("done"); });
+    }
+    if (T === "trailer"){
+      const steps = [
+        ["Bist du sicher? Der ist schon ziemlich heftig.","Ja, zeig her"],
+        ["Wirklich? Letzte Chance…","Okay, los"],
+      ];
+      let s = 0;
+      $("trbtn").addEventListener("click", ()=>{
+        if (s < steps.length){ $("trtxt").textContent = steps[s][0]; $("trbtn").textContent = steps[s][1]; s++; return; }
+        $("trbox").innerHTML = `<p><b>Der gruseligste Trailer des Jahres:</b></p><div id="trimg"></div><p class="small" id="trfail" style="display:none">Der Welpe schläft gerade. Stell ihn dir einfach vor. 🐶</p>`;
+        const img = new Image(); img.className = "dogimg"; img.alt = "Ein Hund"; img.style.display = "none";
+        $("trimg").appendChild(img);
+        img.onerror = ()=>{ img.style.display="none"; $("trfail").style.display="block"; };
+        fetch("https://dog.ceo/api/breeds/image/random")
+          .then(r=>r.json()).then(j=>{ img.src=j.message; img.style.display="block"; })
+          .catch(()=>{ $("trfail").style.display="block"; });
+      });
+    }
+    if (T === "rating"){
+      const vals = {};
+      body.querySelectorAll(".stars").forEach(row=>{
+        row.querySelectorAll(".star").forEach(st=>st.addEventListener("click", ()=>{
+          const v = +st.dataset.s; vals[row.dataset.c] = v;
+          row.querySelectorAll(".star").forEach(x=>x.textContent = (+x.dataset.s <= v) ? "★" : "☆");
+        }));
+      });
+      $("ratebtn").addEventListener("click", ()=>{
+        const n = Object.keys(vals).length;
+        if (n < day.cats.length){ $("ratefb").textContent = "Erst alles bewerten. Das ist ein offizielles Dokument."; return; }
+        const avg = Object.values(vals).reduce((a,b)=>a+b,0)/n;
+        $("ratefb").textContent = `Gesamtnote: ${avg.toFixed(1).replace(".",",")} ⭐. Danke für dein Feedback, es wurde an Mike weitergeleitet.`;
+        confetti();
+      });
+    }
+    if (T === "suggest"){
+      $("suggbtn").addEventListener("click", ()=>{
+        $("suggfb").textContent = "Kann eh nicht sehen, was du hier eingibst. Wir gucken einfach nen Horrorfilm. 😌";
+      });
     }
     if (day.day === 24) confetti(true);
   }
