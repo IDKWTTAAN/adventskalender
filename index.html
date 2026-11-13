@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Emilys Adventskalender</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#13233a; --night2:#1d3557; --cream:#fff6e6; --paper:#fdf0d8;
+  --red:#d6453d; --red-dark:#a8322c; --green:#3f7d5c; --gold:#f2b84b;
+  --brown:#8a5a3b; --ink:#2b2118; --muted:#6f6052;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  min-height:100vh; background:radial-gradient(ellipse at top,var(--night2),var(--night) 70%);
+  color:var(--cream); font-family:"Nunito",system-ui,sans-serif; overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+#snow{position:fixed;inset:0;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:28px 16px 60px}
+header{text-align:center;margin-bottom:22px}
+header .mascot{width:92px;height:auto;display:block;margin:0 auto 6px}
+h1{font-family:"Fredoka",sans-serif;font-weight:700;font-size:clamp(28px,7vw,48px);margin:0;line-height:1.1;color:var(--cream)}
+h1 span{color:var(--gold)}
+.sub{margin:8px auto 0;max-width:520px;color:#c9d4e3;font-size:15px}
+.status{margin:14px auto 0;display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  padding:8px 14px;border-radius:999px;font-size:14px;color:#e8eef6}
+.preview-badge{display:inline-block;margin-top:10px;background:var(--gold);color:var(--ink);font-weight:700;
+  padding:4px 12px;border-radius:999px;font-size:13px}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;grid-auto-flow:dense}
+@media(min-width:560px){.grid{grid-template-columns:repeat(4,1fr);gap:14px}}
+@media(min-width:820px){.grid{grid-template-columns:repeat(6,1fr)}}
+.door{
+  position:relative;aspect-ratio:1/1;border:0;padding:0;cursor:pointer;background:none;perspective:700px;
+  font:inherit;color:inherit;
+}
+.door.big{grid-column:span 2;grid-row:span 2}
+.door .inner{position:absolute;inset:0;border-radius:14px;background:var(--paper);
+  box-shadow:inset 0 0 0 3px rgba(0,0,0,.05),0 6px 0 rgba(0,0,0,.25);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:clamp(30px,9vw,46px)}
+.door .leaf{
+  position:absolute;inset:0;border-radius:14px;transform-origin:left center;transition:transform .7s cubic-bezier(.3,.7,.3,1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  backface-visibility:hidden;box-shadow:0 6px 0 rgba(0,0,0,.25);
+}
+.door:nth-child(4n+1) .leaf{background:var(--red)}
+.door:nth-child(4n+2) .leaf{background:var(--green)}
+.door:nth-child(4n+3) .leaf{background:var(--brown)}
+.door:nth-child(4n+4) .leaf{background:#2f6f8f}
+.door .leaf::before{content:"";position:absolute;inset:6px;border:2px dashed rgba(255,255,255,.35);border-radius:10px}
+.door .num{font-family:"Fredoka",sans-serif;font-weight:700;font-size:clamp(26px,7.5vw,40px);color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+.door.big .num{font-size:clamp(44px,14vw,72px)}
+.door .lock{font-size:13px;opacity:.85}
+.door.opened .leaf{transform:rotateY(-105deg)}
+.door.locked{cursor:not-allowed}
+.door.locked .leaf{filter:saturate(.75) brightness(.9)}
+.door.today .leaf{animation:wiggle 2.4s ease-in-out infinite}
+.door:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:14px}
+@keyframes wiggle{0%,86%,100%{transform:rotate(0)}90%{transform:rotate(-3deg)}94%{transform:rotate(3deg)}}
+.door.shake .leaf{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* modal */
+.backdrop{position:fixed;inset:0;background:rgba(8,14,26,.72);display:none;align-items:flex-end;justify-content:center;z-index:10;padding:0}
+.backdrop.show{display:flex}
+@media(min-width:560px){.backdrop{align-items:center;padding:20px}}
+.modal{
+  background:var(--cream);color:var(--ink);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;
+  border-radius:22px 22px 0 0;padding:26px 22px 28px;position:relative;animation:pop .35s ease;
+  -webkit-overflow-scrolling:touch;
+}
+@media(min-width:560px){.modal{border-radius:22px}}
+@keyframes pop{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.close{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.06);
+  font-size:22px;cursor:pointer;color:var(--ink)}
+.m-day{font-family:"Fredoka";font-weight:600;color:var(--red);font-size:14px;letter-spacing:.06em;text-transform:uppercase}
+.m-icon{font-size:64px;line-height:1;margin:8px 0}
+.m-icon svg{width:96px;height:auto}
+.modal h2{font-family:"Fredoka";font-weight:700;margin:4px 0 10px;font-size:26px;line-height:1.15}
+.modal p{font-size:17px;line-height:1.55;margin:0 0 12px}
+.modal .small{font-size:14px;color:var(--muted)}
+.modal ul,.modal ol{padding-left:22px;margin:0 0 12px;font-size:16px;line-height:1.6}
+.coupon{border:3px dashed var(--red);border-radius:14px;padding:14px;text-align:center;background:#fff;margin:10px 0}
+.coupon b{font-family:"Fredoka";font-size:20px;color:var(--red)}
+.opts{display:grid;gap:8px;margin:10px 0}
+.opt{min-height:48px;border-radius:12px;border:2px solid #e3d3b8;background:#fff;font:600 16px "Nunito";cursor:pointer;color:var(--ink);padding:8px 12px;text-align:left}
+.opt:hover{border-color:var(--gold)}
+.opt.right{background:#dff3e6;border-color:var(--green)}
+.opt.wrong{background:#fbe1df;border-color:var(--red)}
+.feedback{min-height:24px;font-weight:700;margin-top:6px}
+.btn{display:inline-block;min-height:48px;padding:12px 20px;border-radius:12px;border:0;background:var(--red);color:#fff;font:700 16px "Nunito";cursor:pointer}
+.btn:hover{background:var(--red-dark)}
+.dogimg{width:100%;max-height:340px;object-fit:cover;border-radius:14px;background:#eee;display:block;margin:6px 0 10px}
+.photo{width:100%;border-radius:14px;margin:6px 0 12px;display:block}
+.sig{font-family:"Fredoka";font-weight:600;color:var(--red);margin-top:6px}
+footer{text-align:center;margin-top:30px;color:#9fb0c6;font-size:13px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+
+<div class="wrap">
+  <header>
+    <svg class="mascot" viewBox="0 0 120 100" aria-hidden="true" id="wombatSvg">
+      <!-- kleiner Wombat mit Mütze -->
+      <ellipse cx="60" cy="68" rx="44" ry="28" fill="#8a6a50"/>
+      <ellipse cx="60" cy="50" rx="30" ry="24" fill="#9c7a5c"/>
+      <circle cx="36" cy="34" r="8" fill="#9c7a5c"/><circle cx="84" cy="34" r="8" fill="#9c7a5c"/>
+      <circle cx="36" cy="34" r="4" fill="#d9a98a"/><circle cx="84" cy="34" r="4" fill="#d9a98a"/>
+      <circle cx="49" cy="48" r="4" fill="#2b2118"/><circle cx="71" cy="48" r="4" fill="#2b2118"/>
+      <circle cx="50" cy="47" r="1.3" fill="#fff"/><circle cx="72" cy="47" r="1.3" fill="#fff"/>
+      <ellipse cx="60" cy="58" rx="10" ry="7" fill="#3b2c22"/>
+      <ellipse cx="45" cy="58" rx="5" ry="3" fill="#e79a8f" opacity=".6"/><ellipse cx="75" cy="58" rx="5" ry="3" fill="#e79a8f" opacity=".6"/>
+      <path d="M34 30 Q60 -6 88 30 Z" fill="#d6453d"/>
+      <rect x="31" y="26" width="58" height="9" rx="4.5" fill="#fff6e6"/>
+      <circle cx="62" cy="6" r="6" fill="#fff6e6"/>
+      <ellipse cx="34" cy="92" rx="10" ry="5" fill="#6e523d"/><ellipse cx="86" cy="92" rx="10" ry="5" fill="#6e523d"/>
+    </svg>
+    <h1>Emilys <span>Adventskalender</span></h1>
+    <p class="sub">24 Türchen voller Hunde, Wombats und Kängurus. Und zu 100&nbsp;% spinnenfrei.</p>
+    <div class="status" id="status"></div>
+    <div id="previewBadge"></div>
+  </header>
+
+  <main class="grid" id="grid"></main>
+
+  <footer>Mit Liebe gebaut &middot; Gilt als Mathe-Hausaufgabe: 24 Türchen zählen</footer>
+</div>
+
+<div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="modal" id="modal">
+    <button class="close" id="closeBtn" aria-label="Schließen">✕</button>
+    <div id="mBody"></div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   HIER KANNST DU ALLES ANPASSEN – ohne den Code darunter anzufassen.
+   - ABSENDER: wie du unterschreibst
+   - Jeder Tag: icon (Emoji), title, html (Text, darf <p>, <b>, <ul> usw.)
+   - Optional: photo: "bilder/tag5.jpg"  (Bild in den Ordner "bilder" legen)
+   - type: "quiz" (mit question/options/answer/right/wrong) oder "dog"
+   - Stellen mit ✏️ solltest du persönlich ausfüllen!
+   ===================================================================== */
+const ABSENDER = "✏️ Dein Name";
+const JAHR = 2026;
+
+const TAGE = [
+  { day:1, icon:"wombat", title:"Hallo Emily!",
+    html:`<p>Willkommen zu deinem Adventskalender! Ab heute gibt's jeden Tag ein Türchen – direkt nach Paignton geliefert, ganz ohne Royal Mail.</p>
+          <p>Dein Guide durch den Dezember: <b>Wally, der Wombat</b>. Er ist klein, flauschig und kann besser rechnen als du. (Sorry. Musste sein.)</p>` },
+
+  { day:2, icon:"🟫", title:"Wombat-Fakt #1",
+    html:`<p>Wombats sind die einzigen Tiere der Welt, die <b>würfelförmig kacken</b>. Echt jetzt.</p>
+          <p>Ein Wombat produziert also täglich perfekte Würfel. Du kriegst nicht mal einen Würfel Butter gerade geschnitten. 😌</p>` },
+
+  { day:3, icon:"🧮", title:"Mathe-Check", type:"quiz",
+    question:"Kurzer Test, ob dein Gehirn im Advent-Modus ist: Wie viel ist 7 + 8?",
+    options:["13","15","Kommt drauf an","Ich ruf dich an und frag"],
+    answer:1,
+    right:"WAS?! Richtig! Das ist ein echtes Weihnachtswunder. 🎄",
+    wrong:"Knapp daneben ist auch vorbei. Tipp: Die richtige Zahl ist auch das Türchen mit dem Mathe-Nachhilfe-Gutschein. Zufall? 😏" },
+
+  { day:4, icon:"🐶", title:"Hunde-Fakt",
+    html:`<p>Die Nase eines Hundes hat ein ganz eigenes Muster – wie ein Fingerabdruck. <b>Keine zwei Hundenasen sind gleich.</b></p>
+          <p>Heißt: Jeder Hund, den du in England heimlich streichelst, ist ein Unikat. Du darfst also alle streicheln. Ist quasi Pflicht.</p>` },
+
+  { day:5, icon:"🌴", title:"Grüße an die English Riviera",
+    html:`<p>Wusstest du, dass Paignton, Torquay und Brixham zusammen <b>„English Riviera“</b> genannt werden?</p>
+          <p>Riviera. Mit Palmen. Bei 8 Grad und Seitenwind-Nieselregen. Die Briten haben einfach Humor. ☔🌴</p>` },
+
+  { day:6, icon:"🎅", title:"Nikolaus-Gutschein",
+    html:`<p>Weil du dieses Jahr (fast) brav warst:</p>
+          <div class="coupon"><b>GUTSCHEIN</b><br>✏️ z.&nbsp;B. „1× Lieblingssnacks, wenn du wieder da bist“</div>
+          <p class="small">Einlösbar bei mir. Keine Rückgabe, kein Umtausch, keine Diskussion.</p>` },
+
+  { day:7, icon:"🏋️", title:"Advents-Workout",
+    html:`<p>Gym heute? Hier ist dein offizielles Weihnachts-Workout:</p>
+          <ul>
+            <li>24 Squats – eins für jedes Türchen</li>
+            <li>12 Liegestütze – für die 12 Tage of Christmas</li>
+            <li>3 × 30 Sek. Plank – für die heiligen drei Könige</li>
+            <li>1 Lebkuchen danach – für die Moral</li>
+          </ul>
+          <p class="small">Zählen darfst du mit den Fingern. Ich verrat's keinem.</p>` },
+
+  { day:8, icon:"🦘", title:"Baby-Känguru",
+    html:`<p>Ein Baby-Känguru heißt <b>Joey</b>. Bei der Geburt ist es ungefähr so groß wie ein <b>Gummibärchen</b> und krabbelt dann ganz allein in Mamas Beutel.</p>
+          <p>Ein Gummibärchen-Känguru. Ich weiß. Ich weiß. 🥹</p>` },
+
+  { day:9, icon:"👩‍🍳", title:"Rezept für Profis (also dich)",
+    html:`<p><b>Heiße Schokolade à la Emily</b></p>
+          <ol>
+            <li>Milch in einen Topf.</li>
+            <li>Herd an. (Der Knopf, nicht der Rauchmelder.)</li>
+            <li>2 EL Kakao + 1 EL Zucker rein, rühren.</li>
+            <li>Bevor's überkocht: Herd aus. Das ist der schwierige Teil.</li>
+            <li>Marshmallows oben drauf. Genießen.</li>
+          </ol>
+          <p class="small">Wenn's klappt: Foto schicken als Beweis. 📸</p>` },
+
+  { day:10, icon:"⛵", title:"Segel-Quiz", type:"quiz",
+    question:"Ahoi Matrosin! Welche Seite eines Schiffs ist „Backbord“?",
+    options:["Links (in Fahrtrichtung)","Rechts (in Fahrtrichtung)","Die mit den Keksen"],
+    answer:0,
+    right:"Aye! Backbord = links, Steuerbord = rechts. Du darfst ans Ruder. ⚓",
+    wrong:"Leider nein – Backbord ist links, Steuerbord rechts. Gut, dass das Meer keine Matheprüfung ist. 🌊" },
+
+  { day:11, icon:"🏍️", title:"Motorrad-Weisheit",
+    html:`<p>„Vier Räder bewegen den Körper. <b>Zwei Räder bewegen die Seele.</b>“</p>
+          <p>Und in England fahren sie auch noch auf der falschen Seite. Also: Augen auf, wenn du da Moped fährst – und erst nach rechts gucken! 😄</p>` },
+
+  { day:12, icon:"🛡️", title:"Offizielle Entwarnung",
+    html:`<p>Hiermit wird feierlich bestätigt: Dieser Adventskalender ist <b>zu 100&nbsp;% achtbeinerfrei</b>.</p>
+          <p>Geprüft und versiegelt vom <b>Wombat-Sicherheitsdienst</b>. Wally hat jedes Türchen persönlich kontrolliert. Du kannst also ganz entspannt weiter klicken. 🐾</p>` },
+
+  { day:13, icon:"😊", title:"Das glücklichste Tier der Welt",
+    html:`<p>Das <b>Quokka</b> lebt in Westaustralien (vor allem auf Rottnest Island) und sieht so aus, als würde es <b>dauernd lächeln</b>.</p>
+          <p>Es ist ungefähr so groß wie eine Katze und hat absolut null Sorgen. Sei heute ein Quokka. 😊</p>` },
+
+  { day:14, icon:"🍪", title:"Textaufgabe",
+    html:`<p>Emily hat 10 Kekse. Sie isst 3 beim Backen, 2 fallen runter und 1 verbrennt.</p>
+          <p><b>Wie viele Kekse hat Emily?</b></p>
+          <p class="small">Lösung: Keine. Weil sie das Rezept falsch abgemessen hat und es nie Kekse wurden. 😇 (Hab dich trotzdem lieb.)</p>` },
+
+  { day:15, icon:"🎟️", title:"Gutschein",
+    html:`<div class="coupon"><b>GUTSCHEIN</b><br>1× Mathe-Nachhilfe<br><span class="small">inklusive extra viel Geduld und Snacks</span></div>
+          <p class="small">Alternativ eintauschbar gegen: ✏️ (dein Vorschlag)</p>` },
+
+  { day:16, icon:"🐨", title:"Koala-Mood",
+    html:`<p>Koalas schlafen bis zu <b>20 Stunden am Tag</b>, weil Eukalyptusblätter kaum Energie liefern.</p>
+          <p>Falls du heute also nicht ins Gym willst: Du bist einfach im Koala-Modus. Wissenschaftlich begründet. 🐨💤</p>` },
+
+  { day:17, icon:"🐕", title:"Hund des Tages", type:"dog",
+    html:`<p>Ein zufälliger Hund, nur für dich. Jedes Mal ein anderer!</p>` },
+
+  { day:18, icon:"🇬🇧", title:"British Slang für Fortgeschrittene",
+    html:`<ul>
+            <li><b>chuffed</b> – richtig happy („I'm chuffed to bits!“)</li>
+            <li><b>knackered</b> – fix und fertig (nach dem Gym)</li>
+            <li><b>cuppa</b> – eine Tasse Tee</li>
+            <li><b>gutted</b> – total enttäuscht</li>
+          </ul>
+          <p>Beispielsatz: „Totally knackered after the gym, need a cuppa.“ Du bist praktisch schon Britin. 🫖</p>` },
+
+  { day:19, icon:"wombat", title:"Wombat-Fakt #2",
+    html:`<p>Wombats sehen gemütlich aus, können aber auf kurzen Strecken bis zu <b>40 km/h</b> schnell rennen!</p>
+          <p>Klein, knuffig, unterschätzt und plötzlich schneller als alle. Erinnert mich an jemanden. 😉</p>` },
+
+  { day:20, icon:"💌", title:"Kleine Nachricht",
+    html:`<p>✏️ Hier eine persönliche Nachricht oder ein Insider einfügen – z.&nbsp;B. eine Erinnerung an einen lustigen Moment.</p>` },
+
+  { day:21, icon:"🌊", title:"Kängurus können schwimmen",
+    html:`<p>Kängurus sind überraschend gute <b>Schwimmer</b> – und im Wasser können sie ihre Hinterbeine sogar einzeln bewegen, an Land hüpfen sie nur mit beiden gleichzeitig.</p>
+          <p>Also: Sollte dir beim Segeln mal ein Känguru begegnen – einfach freundlich winken. 🦘⛵</p>` },
+
+  { day:22, icon:"✈️", title:"Countdown",
+    html:`<p>Nur noch <b>2 Türchen</b>! Selbst du kannst das ohne Taschenrechner ausrechnen. 🎉</p>
+          <p>✏️ Optional: Hier passt ein gemeinsames Foto hin (siehe Anleitung).</p>` },
+
+  { day:23, icon:"🎄", title:"Fast geschafft",
+    html:`<p>Morgen ist Heiligabend! Zeit für ein kleines Fazit dieses Kalenders:</p>
+          <ul>
+            <li>Gelernte Tierfakten: viele</li>
+            <li>Gelöste Matheaufgaben: …wir reden nicht drüber</li>
+            <li>Gesichtete Achtbeiner: 0 ✅</li>
+            <li>Gestreichelte Hunde in England: hoffentlich viele</li>
+          </ul>` },
+
+  { day:24, icon:"🎁", title:"Frohe Weihnachten, Emily!", big:true,
+    html:`<p>✏️ Hier kommt dein persönlicher Weihnachtsbrief hin – das wichtigste Türchen von allen.</p>
+          <p>Schreib, was du ihr wirklich sagen willst, ein paar Insider, und was du dir für die Zeit nach ihrem Auslandsjahr vornimmst.</p>
+          <p>Frohe Weihnachten nach Paignton! 🎄🐶🦘</p>` },
+];
+
+/* ======================= AB HIER: CODE ======================= */
+(function(){
+  const params = new URLSearchParams(location.search);
+  const PREVIEW = params.has("vorschau");
+  // Testdatum: ?datum=2026-12-15  (zum Ausprobieren)
+  let NOW = new Date();
+  const d = params.get("datum");
+  if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) NOW = new Date(d + "T12:00:00");
+
+  // Datum in englischer Zeit (Emily ist in Paignton)
+  function londonParts(date){
+    try{
+      const f = new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/London",year:"numeric",month:"2-digit",day:"2-digit"});
+      const p = Object.fromEntries(f.formatToParts(date).map(x=>[x.type,x.value]));
+      return {y:+p.year,m:+p.month,d:+p.day};
+    }catch(e){ return {y:date.getFullYear(),m:date.getMonth()+1,d:date.getDate()}; }
+  }
+  const t = londonParts(NOW);
+  const todayNum = t.y*10000 + t.m*100 + t.d;
+  const doorNum = n => JAHR*10000 + 1200 + n;
+  const isOpenable = n => PREVIEW || todayNum >= doorNum(n);
+  const isToday = n => todayNum === doorNum(n);
+
+  // gespeicherte geöffnete Türchen
+  const KEY = "emily-advent-" + JAHR;
+  let opened = {};
+  try{ opened = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }catch(e){ opened = {}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(opened)); }catch(e){} }
+
+  const WOMBAT = document.getElementById("wombatSvg").outerHTML.replace('class="mascot"','').replace('id="wombatSvg"','');
+  const iconHTML = ic => ic === "wombat" ? WOMBAT : ic;
+
+  // Status
+  const status = document.getElementById("status");
+  if (PREVIEW){
+    document.getElementById("previewBadge").innerHTML = '<span class="preview-badge">Vorschau-Modus: alle Türchen offen</span>';
+  }
+  if (todayNum < doorNum(1)){
+    const start = Date.UTC(JAHR,11,1), nowUtc = Date.UTC(t.y,t.m-1,t.d);
+    const days = Math.round((start - nowUtc)/86400000);
+    status.textContent = days === 1 ? "Morgen geht's los! 🎄" : `Noch ${days} Tage bis zum ersten Türchen 🎄`;
+  } else if (todayNum > doorNum(24)){
+    status.textContent = "Frohe Weihnachten! Alle Türchen sind offen 🎁";
+  } else {
+    status.textContent = `Heute ist Türchen ${t.d} dran ✨`;
+  }
+
+  // Türchen in gemischter Reihenfolge (fest, nicht zufällig)
+  const ORDER = [7,1,18,12,3,22,9,15,24,5,20,11,2,16,8,13,19,4,23,10,6,17,14,21];
+  const grid = document.getElementById("grid");
+  ORDER.forEach(n=>{
+    const day = TAGE.find(x=>x.day===n); if(!day) return;
+    const b = document.createElement("button");
+    b.className = "door" + (day.big ? " big" : "");
+    b.setAttribute("aria-label", "Türchen " + n);
+    const can = isOpenable(n);
+    if (!can) b.classList.add("locked");
+    if (isToday(n) && !opened[n]) b.classList.add("today");
+    if (opened[n] && can) b.classList.add("opened");
+    b.innerHTML = `<div class="inner">${day.icon==="wombat" ? "🐾" : day.icon}</div>
+      <div class="leaf"><span class="num">${n}</span>${can ? "" : '<span class="lock">🔒</span>'}</div>`;
+    b.addEventListener("click", ()=>{
+      if (!isOpenable(n)){
+        b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
+        const left = Math.round((Date.UTC(JAHR,11,n) - Date.UTC(t.y,t.m-1,t.d))/86400000);
+        status.textContent = `Geduld! Türchen ${n} geht erst in ${left} ${left===1?"Tag":"Tagen"} auf 😏`;
+        return;
+      }
+      const first = !opened[n];
+      opened[n] = true; save();
+      b.classList.remove("today"); b.classList.add("opened");
+      setTimeout(()=>openModal(day), first ? 550 : 0);
+    });
+    grid.appendChild(b);
+  });
+
+  // Modal
+  const backdrop = document.getElementById("backdrop");
+  const body = document.getElementById("mBody");
+  let lastFocus = null;
+  function openModal(day){
+    lastFocus = document.activeElement;
+    let h = `<div class="m-day">${day.day}. Dezember</div>
+             <div class="m-icon">${iconHTML(day.icon)}</div>
+             <h2 id="mTitle">${day.title}</h2>`;
+    if (day.photo) h += `<img class="photo" src="${day.photo}" alt="" onerror="this.remove()">`;
+    if (day.html) h += day.html;
+    if (day.type === "quiz"){
+      h += `<p>${day.question}</p><div class="opts">` +
+           day.options.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join("") +
+           `</div><div class="feedback" id="fb"></div>`;
+    }
+    if (day.type === "dog"){
+      h += `<img class="dogimg" id="dogimg" alt="Ein zufälliger Hund" style="display:none">
+            <p id="dogfail" class="small" style="display:none">Der Hund ist gerade Gassi. 🐕 Versuch's gleich nochmal!</p>
+            <button class="btn" id="dogbtn">Noch ein Hund! 🐶</button>`;
+    }
+    h += `<p class="sig">– ${ABSENDER}</p>`;
+    body.innerHTML = h;
+    backdrop.classList.add("show");
+    document.body.style.overflow = "hidden";
+    document.getElementById("modal").scrollTop = 0;
+    document.getElementById("closeBtn").focus();
+
+    if (day.type === "quiz"){
+      const fb = document.getElementById("fb");
+      body.querySelectorAll(".opt").forEach(btn=>btn.addEventListener("click",()=>{
+        const i = +btn.dataset.i;
+        body.querySelectorAll(".opt").forEach(x=>x.classList.remove("right","wrong"));
+        btn.classList.add(i===day.answer ? "right" : "wrong");
+        fb.textContent = i===day.answer ? day.right : day.wrong;
+        if (i===day.answer) confetti();
+      }));
+    }
+    if (day.type === "dog"){
+      const img = document.getElementById("dogimg"), fail = document.getElementById("dogfail");
+      const load = ()=>{
+        fail.style.display="none";
+        fetch("https://dog.ceo/api/breeds/image/random")
+          .then(r=>r.json()).then(j=>{ if(j && j.message){ img.style.display="block"; img.src=j.message; } else throw 0; })
+          .catch(()=>{ img.style.display="none"; fail.style.display="block"; });
+      };
+      img.onerror = ()=>{ img.style.display="none"; fail.style.display="block"; };
+      document.getElementById("dogbtn").addEventListener("click", load);
+      load();
+    }
+    if (day.day === 24) confetti(true);
+  }
+  function closeModal(){
+    backdrop.classList.remove("show");
+    document.body.style.overflow = "";
+    if (lastFocus) lastFocus.focus();
+  }
+  document.getElementById("closeBtn").addEventListener("click", closeModal);
+  backdrop.addEventListener("click", e=>{ if(e.target===backdrop) closeModal(); });
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape" && backdrop.classList.contains("show")) closeModal(); });
+
+  // Schnee + Konfetti
+  const cv = document.getElementById("snow"), cx = cv.getContext("2d");
+  let W, H, flakes = [], bits = [];
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function resize(){ W = cv.width = innerWidth; H = cv.height = innerHeight; }
+  resize(); addEventListener("resize", resize);
+  const count = reduce ? 0 : Math.min(90, Math.round(innerWidth/9));
+  for (let i=0;i<count;i++) flakes.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2.4+0.8,s:Math.random()*0.6+0.3,w:Math.random()*Math.PI*2});
+  function confetti(big){
+    if (reduce) return;
+    const cols = ["#d6453d","#f2b84b","#3f7d5c","#fff6e6","#2f6f8f"];
+    for (let i=0;i<(big?180:70);i++) bits.push({x:W/2,y:H*0.45,vx:(Math.random()-.5)*12,vy:Math.random()*-11-3,
+      c:cols[i%cols.length],r:Math.random()*5+3,life:120+Math.random()*60,rot:Math.random()*6});
+    cv.style.zIndex = 20;
+  }
+  function tick(){
+    cx.clearRect(0,0,W,H);
+    cx.fillStyle = "rgba(255,255,255,.8)";
+    for (const f of flakes){
+      f.y += f.s; f.w += 0.01; f.x += Math.sin(f.w)*0.4;
+      if (f.y > H+5){ f.y = -5; f.x = Math.random()*W; }
+      cx.beginPath(); cx.arc(f.x,f.y,f.r,0,Math.PI*2); cx.fill();
+    }
+    for (const b of bits){
+      b.vy += 0.3; b.x += b.vx; b.y += b.vy; b.life--; b.rot += 0.1;
+      cx.save(); cx.translate(b.x,b.y); cx.rotate(b.rot); cx.fillStyle=b.c; cx.fillRect(-b.r/2,-b.r/2,b.r,b.r*1.6); cx.restore();
+    }
+    bits = bits.filter(b=>b.life>0 && b.y<H+20);
+    if (!bits.length) cv.style.zIndex = 0;
+    requestAnimationFrame(tick);
+  }
+  if (!reduce) tick();
+})();
+</script>
+</body>
+</html>
