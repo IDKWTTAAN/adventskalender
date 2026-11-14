@@ -322,7 +322,7 @@ const TAGE = [
     html:`<p>Ich hab einen Trailer für unseren Filmabend gefunden. Ist nur ganz kurz.</p>` },
 
   { day:20, icon:"📋", title:"Dein England-Zeugnis", type:"rating",
-    html:`<p>Bevor's nach Hause geht: Bitte bewerte dein Auslandsjahr.</p>`,
+    html:`<p>Bevor's im Januar nach Hause geht: Bitte bewerte dein Auslandsjahr.</p>`,
     cats:["Wetter ☔","Essen 🍽️","Hunde 🐶","Schule 📚"],
     reward:{img:"bilder/belohnung-corgi.jpg", text:"Belohnung: ein Corgi. Britischer wird's nicht. 🇬🇧"} },
 
@@ -358,7 +358,7 @@ const TAGE = [
     button:"Noch ein Tier! 🐾",
     html:`<p>24 Türchen, 0 Spinnen, ungefähr eine gelöste Matheaufgabe.</p>
           <p>Ich hoffe, der Kalender hat dir den Dezember ein bisschen versüßt.</p>
-          <p>Schön, dass du wieder da bist. Jetzt kann ich deine Lasagne ja endlich mal testen. 🍝</p>
+          <p>Noch ein paar Wochen England, dann kann ich dir endlich Mike richtig vorstellen. 🕶️</p>
           <p>Frohe Weihnachten! 🎄</p>
           <p class="small">PS: Mike lässt grüßen.</p>
           <p>Und zum Schluss nochmal alle Tiere aus dem Kalender:</p>` },
@@ -372,8 +372,8 @@ const TAGE = [
   // Hier stehen nur SHA-256-Hashes, nicht die Passwörter selbst.
   const EMILY_HASH = "d7b8988f8fd2edbd7c5a63ff60009a39f9cc9546f2ca1a5e8eafea8e2f2fa97b";
   const PW_HASH    = "22825e94390e6d4855af965afa3f27e4cd90f7ef8010f3a45904a1008fcdd247";
-  const ADMIN_KEY = "advent-test-v2", LOGIN_KEY = "advent-login-v2";
-  try{ localStorage.removeItem("advent-testmodus"); localStorage.removeItem("advent-login"); }catch(e){}
+  const ADMIN_KEY = "advent-test-v3", LOGIN_KEY = "advent-login-v3";
+  try{ ["advent-testmodus","advent-login","advent-test-v2","advent-login-v2"].forEach(k=>localStorage.removeItem(k)); }catch(e){}
   let PREVIEW = false, LOGGED = false;
   try{
     PREVIEW = localStorage.getItem(ADMIN_KEY) === PW_HASH;
@@ -462,7 +462,12 @@ const TAGE = [
     const days = Math.round((start - nowUtc)/86400000);
     status.textContent = days === 1 ? "Morgen geht's los! 🎄" : `Noch ${days} Tage bis zum ersten Türchen 🎄`;
   } else if (todayNum > doorNum(24)){
-    status.textContent = "Frohe Weihnachten! Alle Türchen sind offen 🎁";
+    const back = Date.UTC(JAHR+1,0,9), nowUtc = Date.UTC(t.y,t.m-1,t.d);
+    const left = Math.round((back - nowUtc)/86400000);
+    status.textContent = left > 1 ? `Alle Türchen sind offen 🎁 Noch ${left} Tage, bis du wieder da bist ✈️`
+      : left === 1 ? "Morgen bist du wieder da! ✈️"
+      : left === 0 ? "Willkommen zurück, Emily! 🎉"
+      : "Alle Türchen sind offen 🎁";
   } else {
     status.textContent = `Heute ist Türchen ${t.d} dran ✨`;
   }
