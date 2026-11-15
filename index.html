@@ -417,7 +417,11 @@ const TAGE = [
   }
   const t = londonParts(NOW);
   const todayNum = t.y*10000 + t.m*100 + t.d;
-  const doorNum = n => JAHR*10000 + 1200 + n;
+  // Tag, an dem Türchen 1 aufgeht (danach jeden Tag eins mehr)
+  // ⚠️ TEST: 15.11. – für den echten Kalender wieder auf Date.UTC(JAHR,11,1) stellen!
+  const START = Date.UTC(2026,10,15);
+  const doorUtc = n => START + (n-1)*86400000;
+  const doorNum = n => { const x = new Date(doorUtc(n)); return x.getUTCFullYear()*10000 + (x.getUTCMonth()+1)*100 + x.getUTCDate(); };
   const isOpenable = n => PREVIEW || todayNum >= doorNum(n);
   const isToday = n => todayNum === doorNum(n);
 
@@ -454,7 +458,7 @@ const TAGE = [
     });
   }
   if (todayNum < doorNum(1)){
-    const start = Date.UTC(JAHR,11,1), nowUtc = Date.UTC(t.y,t.m-1,t.d);
+    const start = doorUtc(1), nowUtc = Date.UTC(t.y,t.m-1,t.d);
     const days = Math.round((start - nowUtc)/86400000);
     status.textContent = days === 1 ? "Morgen geht's los! 🎄" : `Noch ${days} Tage bis zum ersten Türchen 🎄`;
   } else if (todayNum > doorNum(24)){
@@ -485,7 +489,7 @@ const TAGE = [
     b.addEventListener("click", ()=>{
       if (!isOpenable(n)){
         b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
-        const left = Math.round((Date.UTC(JAHR,11,n) - Date.UTC(t.y,t.m-1,t.d))/86400000);
+        const left = Math.round((doorUtc(n) - Date.UTC(t.y,t.m-1,t.d))/86400000);
         status.textContent = `Geduld! Türchen ${n} geht erst in ${left} ${left===1?"Tag":"Tagen"} auf 😏`;
         return;
       }
