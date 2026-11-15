@@ -236,8 +236,7 @@ const TAGE = [
     feedbacks:["Wie bitte????","Richtig! Mathe LK ist quasi sicher. 🎓","Worauf denn bitte???","Ich geh ran. Verraten tu ich's trotzdem nicht. 📞","Mike."],
     reward:{img:"bilder/belohnung-eule.jpg", text:"Belohnung: eine schlaue Eule. Fast so schlau wie du gerade. 🦉"} },
 
-  { day:4, icon:"😂", title:"Die ganz große Frage", type:"quiz",
-    question:"Wer hat den besseren Humor?",
+  { day:4, icon:"🎤", title:"Wer hat den besseren Humor?", type:"quiz",
     options:["Mike","Lilian","Emily"],
     answer:1,
     feedbacks:["Mike hat noch nie einen Witz gemacht. Mike macht generell nichts.","Natürlich. Gab nie eine andere Antwort. 😌","Mutig. Aber wer lacht bitte über seine eigenen Witze? 😏"] },
@@ -534,7 +533,7 @@ const TAGE = [
     if (day.coupon) h += couponHTML(day.coupon) + `<p class="small">Liegt ab jetzt bei deinen Gutscheinen.</p>`;
     const T = day.type;
     if (T === "quiz"){
-      h += `<p><b>${day.question}</b></p><div class="opts">` +
+      h += (day.question ? `<p><b>${day.question}</b></p>` : "") + `<div class="opts">` +
            day.options.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join("") +
            `</div><div class="feedback" id="fb"></div>`;
     }
