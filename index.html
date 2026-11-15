@@ -418,8 +418,7 @@ const TAGE = [
   const t = londonParts(NOW);
   const todayNum = t.y*10000 + t.m*100 + t.d;
   // Tag, an dem Türchen 1 aufgeht (danach jeden Tag eins mehr)
-  // ⚠️ TEST: 15.11. – für den echten Kalender wieder auf Date.UTC(JAHR,11,1) stellen!
-  const START = Date.UTC(2026,10,15);
+  const START = Date.UTC(JAHR,11,1);   // 1. Dezember
   const doorUtc = n => START + (n-1)*86400000;
   const doorNum = n => { const x = new Date(doorUtc(n)); return x.getUTCFullYear()*10000 + (x.getUTCMonth()+1)*100 + x.getUTCDate(); };
   const isOpenable = n => PREVIEW || todayNum >= doorNum(n);
