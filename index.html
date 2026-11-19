@@ -357,9 +357,7 @@ const TAGE = [
           <p>Noch ein paar Wochen England, dann kann ich dir endlich Mike richtig vorstellen. 🕶️</p>
           <p>Frohe Weihnachten! 🎄</p>
           <p class="small">PS: Mike lässt grüßen.</p>
-          <p>Und oben drauf noch ein letzter Gutschein:</p>`,
-    coupon:{ title:"1× zusammen segeln gehen", text:"Sobald du zurück bist und das Wetter mitspielt. Mike darf nicht mit." },
-    galText:"Und zum Schluss nochmal alle Tiere aus dem Kalender:" },
+          <p>Und zum Schluss nochmal alle Tiere aus dem Kalender:</p>` },
 ];
 
 /* ======================= AB HIER: CODE ======================= */
@@ -548,7 +546,7 @@ const TAGE = [
             <button class="btn" id="dogbtn">Noch ein Hund! 🐶</button>`;
     }
     if (T === "gallery"){
-      h += (day.galText ? `<p>${day.galText}</p>` : "") + `<div id="galbox"></div><button class="btn" id="galbtn">${day.button}</button>`;
+      h += `<div id="galbox"></div><button class="btn" id="galbtn">${day.button}</button>`;
     }
     if (T === "wheel"){
       h += `<div class="wheel" id="wheel">?</div><button class="btn" id="wheelbtn">Drehen 🎡</button>`;
