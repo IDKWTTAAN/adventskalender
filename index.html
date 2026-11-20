@@ -24,7 +24,15 @@ body{
 #snow{position:fixed;inset:0;pointer-events:none;z-index:0}
 .wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:28px 16px 60px}
 header{text-align:center;margin-bottom:22px}
-header .mascot{width:92px;height:auto;display:block;margin:0 auto 6px}
+header .mascot{width:92px;height:auto;display:block;margin:0}
+.wally-row{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto 6px}
+.wally-btn{position:relative;font-family:"Fredoka",sans-serif;font-weight:600;font-size:15px;color:var(--ink);
+  background:var(--cream);border:0;border-radius:16px;padding:9px 14px;cursor:pointer;
+  box-shadow:0 4px 0 rgba(0,0,0,.25);transition:transform .15s}
+.wally-btn::before{content:"";position:absolute;left:-7px;top:50%;margin-top:-7px;border:7px solid transparent;
+  border-left:0;border-right-color:var(--cream)}
+.wally-btn:hover{transform:translateY(-2px)}
+.wally-btn:active{transform:translateY(1px)}
 h1{font-family:"Fredoka",sans-serif;font-weight:700;font-size:clamp(28px,7vw,48px);margin:0;line-height:1.1;color:var(--cream)}
 h1 span{color:var(--gold)}
 .sub{margin:8px auto 0;max-width:520px;color:#c9d4e3;font-size:15px}
@@ -163,6 +171,7 @@ textarea.pwin{resize:vertical;font-family:"Nunito"}
 
 <div class="wrap">
   <header>
+    <div class="wally-row">
     <svg class="mascot" viewBox="0 0 120 100" aria-hidden="true" id="wombatSvg">
       <!-- kleiner Wombat mit Mütze -->
       <ellipse cx="60" cy="68" rx="44" ry="28" fill="#8a6a50"/>
@@ -178,6 +187,8 @@ textarea.pwin{resize:vertical;font-family:"Nunito"}
       <circle cx="62" cy="6" r="6" fill="#fff6e6"/>
       <ellipse cx="34" cy="92" rx="10" ry="5" fill="#6e523d"/><ellipse cx="86" cy="92" rx="10" ry="5" fill="#6e523d"/>
     </svg>
+    <button class="wally-btn" id="wallyBtn" type="button">Hi, ich bin Wally! 👋</button>
+    </div>
     <h1>Emilys <span>Adventskalender</span></h1>
     <div class="status" id="status"></div>
     <div id="previewBadge"></div>
@@ -221,13 +232,21 @@ const QUOKKA_C = ["SKY-PuLeun, CC BY-SA 4.0","Hesperian, CC BY 3.0","Christophe9
 const KOALA = [1,2,3,4,5,6].map(i=>"bilder/koala"+i+".jpg");
 const KOALA_C = ["Benjamint444, CC BY-SA 3.0","National Media Museum, gemeinfrei","Sanjay ach, CC BY-SA 3.0","Dinkum, CC0","Diliff, CC BY-SA 3.0","AggieNie, CC BY-SA 4.0"];
 
+const SEGELHUND = [1,2,3,4,5].map(i=>"bilder/segelhund"+i+".jpg");
+const SEGELHUND_C = ["cogdogblog, CC0","cogdogblog, CC BY 2.0","Shannon Kringen, CC BY-SA 2.0","Australian National Maritime Museum, keine Einschränkungen","Australian National Maritime Museum, keine Einschränkungen"];
+
+// Wally stellt sich vor (Button oben neben dem Wombat)
+const WALLY_INTRO = { icon:"wombat", title:"Darf ich vorstellen: Wally",
+  html:`<p>Das ist <b>Wally, der Wombat</b>. Er passt den ganzen Dezember auf deine Türchen auf.</p>
+        <p>Sein Job: keine Spinnen, keine Horrorfilme, kein Mike. Mike hat sich glaube ich trotzdem irgendwie reingehackt.</p>` };
+
 const TAGE = [
   { day:1, icon:"🐶", title:"Was ein Knuffi", type:"dog",
     html:`<p>Hund des Tages. Jedes Mal ein anderer, einfach nochmal drücken.</p>` },
 
-  { day:2, icon:"wombat", title:"Darf ich vorstellen: Wally",
-    html:`<p>Das ist <b>Wally, der Wombat</b>. Er passt den ganzen Dezember auf deine Türchen auf.</p>
-          <p>Sein Job: keine Spinnen, keine Horrorfilme, kein Mike. Mike hat sich glaube ich trotzdem irgendwie reingehackt.</p>` },
+  { day:2, icon:"⛵", title:"Leinen los!", type:"gallery",
+    html:`<p>Hunde auf Segelbooten. Die besten Matrosen der Welt, und keiner davon wird jemals seekrank.</p>`,
+    images:SEGELHUND, credits:SEGELHUND_C, button:"Nächster Matrose! ⛵" },
 
   { day:3, icon:"🧮", title:"Training für die Mathearbeit", type:"quiz",
     question:"Kleines Aufwärmen für deinen ersten Schultag zuhause: Wie viel ist 7 + 8?",
@@ -528,7 +547,7 @@ const TAGE = [
   }
   function openModal(day){
     lastFocus = document.activeElement;
-    let h = `<div class="m-day">${day.day}. Dezember</div>
+    let h = (day.day ? `<div class="m-day">${day.day}. Dezember</div>` : "") + `
              <div class="m-icon">${iconHTML(day.icon)}</div>
              <h2 id="mTitle">${day.title}</h2>`;
     if (day.photo) h += `<img class="photo" src="${day.photo}" alt="" onerror="this.remove()">`;
@@ -684,6 +703,7 @@ const TAGE = [
     }
     if (day.day === 24) confetti(true);
   }
+  document.getElementById("wallyBtn").addEventListener("click", ()=>openModal(WALLY_INTRO));
   function closeModal(){
     backdrop.classList.remove("show");
     document.body.style.overflow = "";
